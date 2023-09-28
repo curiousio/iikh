@@ -3,14 +3,14 @@
 #include <iostream>
 #include <vector>
 #include "sqlite/sqlite3.h"
-#include "databaseManager.h"
+#include "DatabaseManager.h"
 
 class Recipe {
  private:
   DatabaseManager dbm;
   std::string menu_name;
   std::string menu_description;
-  std::vector<std::string> menu_ingredient;
+  std::string menu_ingredient;
   std::string menu_recipe;
  public:
   //noArgsConstructor
@@ -43,10 +43,22 @@ class Recipe {
   void selectRecipe() {
     std::string name;
     std::cout << "Input Recipe Name : ";
-    std::cin >> name;
+    std::getline(std::cin, name);
     std::cout << "----------------------------------------" << std::endl;
     dbm.executeQuery(("SELECT * FROM recipe WHERE name = '" + name + "';").c_str());
     std::cout << "----------------------------------------" << std::endl;
+  }
+
+  void addRecipe() {
+    std::cout << "Input Recipe Name : ";
+    std::getline(std::cin, menu_name);
+    std::cout << "Input Recipe Description : ";
+    std::getline(std::cin, menu_description);
+    std::cout << "Input Recipe Ingredient : ";
+    std::getline(std::cin, menu_ingredient);
+    std::cout << "Input Recipe Recipe : ";
+    std::getline(std::cin, menu_recipe);
+    dbm.executeQuery(("INSERT INTO recipe VALUES ('" + menu_name + "', '" + menu_description + "', '" + menu_ingredient + "', '" + menu_recipe + "');").c_str());
   }
 
 };
