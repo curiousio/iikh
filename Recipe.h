@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <utility>
 #include <vector>
 #include "sqlite/sqlite3.h"
 #include "DatabaseManager.h"
@@ -16,8 +17,9 @@ class Recipe {
   //noArgsConstructor
   Recipe() : dbm("recipe.db") {
     //createTable
-    dbm.executeQuery("CREATE TABLE IF NOT EXISTS recipe (name TEXT, description TEXT, ingredient TEXT, recipe TEXT);");
+    dbm.executeQuery("CREATE TABLE IF NOT EXISTS recipe (recipe_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, ingredient TEXT, recipe TEXT);");
   }
+
 
   void searchRecipe() {
     std::cout << "Select a Mode(1. Print All 2. Select) : ";
@@ -34,10 +36,10 @@ class Recipe {
     }
   }
   void printAllRecipe() {
-        std::cout << "All Recipe" << std::endl;
-        std::cout << "----------------------------------------" << std::endl;
-        dbm.executeQuery("SELECT * FROM recipe;");
-        std::cout << "----------------------------------------" << std::endl;
+    std::cout << "All Recipe" << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+    dbm.executeQuery("SELECT * FROM recipe;");
+    std::cout << "----------------------------------------" << std::endl;
   }
 
   void selectRecipe() {
@@ -58,7 +60,8 @@ class Recipe {
     std::getline(std::cin, menu_ingredient);
     std::cout << "Input Recipe Recipe : ";
     std::getline(std::cin, menu_recipe);
-    dbm.executeQuery(("INSERT INTO recipe VALUES ('" + menu_name + "', '" + menu_description + "', '" + menu_ingredient + "', '" + menu_recipe + "');").c_str());
+    //insert문, recipe_id는 Null로 세팅
+    dbm.executeQuery(("INSERT INTO recipe VALUES(NULL, '" + menu_name + "', '" + menu_description + "', '" + menu_ingredient + "', '" + menu_recipe + "');").c_str());
   }
 
 };

@@ -57,24 +57,24 @@ class DatabaseManager {
  private:
   sqlite3 *db;
 
-  //출력용
+  //출력용, Recipe_id, Plan_id는 제외
   static int callback(void *data, int argc, char **argv, char **azColName) {
     std::cout << "----------------------------------------" << std::endl;
-    for (int i = 0; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
       std::cout << azColName[i] << ": " << (argv[i] ? argv[i] : "NULL") << std::endl;
     }
     std::cout << "----------------------------------------" << std::endl;
     return 0;
   }
 
-  //Meal 타입으로 가져오는용도
+  //Meal 타입으로 가져오는용도, Recipe_id는 제외.
   static int getterCallback(void *data, int argc, char **argv, char **azColName) {
-    if (argc == 4) {
+    if (argc == 5) {
       Meal *dataStorage = static_cast<Meal *>(data);
-      dataStorage->setData(argv[0] ? argv[0] : "NULL",
-                           argv[1] ? argv[1] : "NULL",
+      dataStorage->setData(argv[1] ? argv[1] : "NULL",
                            argv[2] ? argv[2] : "NULL",
-                           argv[3] ? argv[3] : "NULL");
+                           argv[3] ? argv[3] : "NULL",
+                           argv[4] ? argv[4] : "NULL");
     }
     return 0;
   }
