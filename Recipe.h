@@ -64,4 +64,23 @@ class Recipe {
     dbm.executeQuery(("INSERT INTO recipe VALUES(NULL, '" + menu_name + "', '" + menu_description + "', '" + menu_ingredient + "', '" + menu_recipe + "');").c_str());
   }
 
+  //Greeter.h의 case 주석 해제
+  void deleteRecipe() {
+      std::cout << "Input Target Recipe Name : ";
+      std::getline(std::cin, menu_recipe);
+      dbm.executeQuery(("DELETE FROM recipe WHERE name='" + menu_recipe + "';").c_str());
+  }
+
+  //num변수를 입력받아서 한 번에 여러 개 update할 수 있게 할까?
+  void updateRecipe() {
+      std::string item, content;
+      std::cout << "Input Target Recipe Name : ";
+      std::getline(std::cin, menu_recipe);
+      std::cout << "What item do you want to update?(name, description, ingredient, recipe) : ";
+      std::getline(std::cin, item);
+      std::cout << "What do you want to update it to?: ";
+      std::getline(std::cin, content);
+      dbm.executeQuery(("UPDATE recipe SET " + item + "='" + content + "' WHERE recipe=" + menu_recipe).c_str());
+  }
+
 };
