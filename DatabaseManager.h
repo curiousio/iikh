@@ -1,23 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <set>
 #include "sqlite/sqlite3.h"
-
-//Meal쪽 없어서 일단 임시로 만들어놓은 클래스. 생기면 삭제후 수정 부탁.
-class Meal {
- public:
-  std::string menu_name;
-  std::string menu_description;
-  std::string menu_ingredient;
-  std::string menu_recipe;
-
-  void setData(const std::string &col1, const std::string &col2, const std::string &col3, const std::string &col4) {
-    menu_name = col1;
-    menu_description = col2;
-    menu_ingredient = col3;
-    menu_recipe = col4;
-  }
-};
 
 class DatabaseManager {
  public:
@@ -45,9 +30,9 @@ class DatabaseManager {
   }
 
   //Meal Class Type으로 받아올때는 이걸 사용
-  void executeQuery(const char *query, Meal *data) {
+  void executeQuery(const char *query, void *data) {
     char *errMsg = nullptr;
-    rc = sqlite3_exec(db, query, getterCallback, data, &errMsg);
+    rc = sqlite3_exec(db, query, getterCallback, data , &errMsg);
     if (rc != SQLITE_OK) {
       std::cerr << "Error : " << errMsg << std::endl;
       sqlite3_free(errMsg);
@@ -67,15 +52,10 @@ class DatabaseManager {
     return 0;
   }
 
-  //Meal 타입으로 가져오는용도, Recipe_id는 제외.
+  //set 타입으로 가져오는용도, select name일 경우에.
   static int getterCallback(void *data, int argc, char **argv, char **azColName) {
-    if (argc == 5) {
-      Meal *dataStorage = static_cast<Meal *>(data);
-      dataStorage->setData(argv[1] ? argv[1] : "NULL",
-                           argv[2] ? argv[2] : "NULL",
-                           argv[3] ? argv[3] : "NULL",
-                           argv[4] ? argv[4] : "NULL");
-    }
+    std::set<std::string> *temp = (std::set<std::string> *) data;
+    temp->insert(argv[1]);
     return 0;
   }
 
