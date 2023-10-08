@@ -68,7 +68,7 @@ class Recipe {
   void deleteRecipe() {
       std::cout << "Input Target Recipe Name : ";
       std::getline(std::cin, menu_recipe);
-      dbm.executeQuery(("DELETE FROM recipe WHERE name='" + menu_recipe + "';").c_str());
+      dbm.executeQuery(("DELETE FROM recipe WHERE recipe='" + menu_recipe + "';").c_str());
   }
 
   //num변수를 입력받아서 한 번에 여러 개 update할 수 있게 할까?
