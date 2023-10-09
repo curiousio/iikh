@@ -127,48 +127,50 @@ class Plan {
     std::cout << "----------------------------------------" << std::endl;
   }
 
-  /*
   void addPlan() {
+    std::string planName;
+    std::string planDate;
+    std::string planBreakfast;
+    std::string planLunch;
+    std::string planDinner;
     std::cout << "Input Plan Name: ";
     std::getline(std::cin, planName);
     std::cout << "Input Date(YYYYMMDD): ";
-    std::getline(std::cin, date);
+    std::getline(std::cin, planDate);
     std::cout << "Input breakfast: ";
-    std::getline(std::cin, breakfast);
+    std::getline(std::cin, planBreakfast);
     std::cout << "Input lunch: ";
-    std::getline(std::cin, lunch);
+    std::getline(std::cin, planLunch);
     std::cout << "Input dinner: ";
-    std::getline(std::cin, dinner);
+    std::getline(std::cin, planDinner);
     // insert문, plan_id는 NULL로 세팅
     dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, '" + planName + "', '" +
-                      date + "', '" + breakfast + "', '" + lunch + "', '" +
-                      dinner + "');")
+                      planDate + "', '" + planBreakfast + "', '" + planLunch +
+                      "', '" + planDinner + "');")
                          .c_str());
   }
-  */
 
-  /*
   void deletePlan() {
+    std::string planName;
     std::cout << "Input Target Plan Name: ";
-    std::getline(std::cin, menu_plan);
+    std::getline(std::cin, planName);
     dbm.executeQuery(
-        ("DELETE FROM plan WHERE planName='" + date + "';").c_str());
+        ("DELETE FROM plan WHERE planName='" + planName + "';").c_str());
   }
-  */
 
-  /*
   void updatePlan() {
-    std::string item, content;
+    std::string planName;
+    std::string item;
+    std::string content;
     std::cout << "Input Target Plan Name: ";
-    std::getline(std::cin, menu_plan);
+    std::getline(std::cin, planName);
     std::cout << "What item do you want to update? (name, date, breakfast, "
                  "lunch, dinner): ";
     std::getline(std::cin, item);
     std::cout << "What do you want to update it to?: ";
     std::getline(std::cin, content);
-    dbm.executeQuery(("UPDATE Plan SET " + item + "='" + content +
-                      "' WHERE plan=" + menu_plan)
+    dbm.executeQuery(("UPDATE plan SET " + item + "='" + content +
+                      "' WHERE plan= '" + planName + "';")
                          .c_str());
   }
-  */
 };
