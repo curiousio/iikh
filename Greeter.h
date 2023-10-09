@@ -5,13 +5,13 @@
 #include <vector>
 
 #include "DatabaseManager.h"
-#include "Recipe.h"
+#include "RecipeDB.h"
 #include "sqlite/sqlite3.h"
 
 class Greeter {
  private:
   std::vector<std::string> menu;
-  Recipe recipe;
+  RecipeDB recipeDB;
 
  public:
   Greeter() {
@@ -37,17 +37,13 @@ class Greeter {
     std::cout << "Selected Menu: " << menu[selectNum - 1] << std::endl;
 
     switch (selectNum) {
-      case 1:
-        recipe.searchRecipe();
+      case 1:recipeDB.searchRecipe();
         break;
-      case 2:
-        recipe.addRecipe();
+      case 2:recipeDB.addRecipe();
         break;
-      case 3:
-        // recipe.deleteRecipe();
+      case 3:recipeDB.deleteRecipe();
         break;
-      case 4:
-        // recipe.updateRecipe();
+      case 4:recipeDB.updateRecipe();
         break;
       case 5:
         // searchPlan();
@@ -61,11 +57,9 @@ class Greeter {
       case 8:
         // updatePlan();
         break;
-      case 9:
-        quit();
+      case 9:quit();
         break;
-      default:
-        std::cout << "Wrong Input" << std::endl;
+      default:std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
