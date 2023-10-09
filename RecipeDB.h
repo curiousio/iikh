@@ -9,12 +9,11 @@
 
 class RecipeDB {
  private:
-  Recipe recipe;
   DatabaseManager dbm;
 
  public:
   // noArgsConstructor
-  RecipeDB() : dbm("recipe.db") {
+  RecipeDB() : dbm("iikh.db") {
     // createTable
     dbm.executeQuery(
         "CREATE TABLE IF NOT EXISTS recipe (recipe_id INTEGER PRIMARY KEY "
@@ -39,22 +38,25 @@ class RecipeDB {
 
   void printAllRecipe() {
     std::cout << "All Recipe" << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
-    dbm.executeQuery("SELECT * FROM recipe;");
-    std::cout << "----------------------------------------" << std::endl;
+    std::vector<Recipe> recipes;
+    dbm.executeQuery("SELECT * FROM recipe;", &recipes, true);
+    for (auto &recipe : recipes) {
+      recipe.printNameAndDescription();
+    }
   }
 
   void selectRecipe() {
+    Recipe recipe;
     std::string name;
     std::cout << "Input Recipe Name: ";
     std::getline(std::cin, name);
-    std::cout << "----------------------------------------" << std::endl;
     dbm.executeQuery(
-        ("SELECT * FROM recipe WHERE name = '" + name + "';").c_str());
-    std::cout << "----------------------------------------" << std::endl;
+        ("SELECT * FROM recipe WHERE name = '" + name + "';").c_str(), &recipe);
+    ;
   }
 
   void addRecipe() {
+    Recipe recipe;
     recipe.addRecipe();
     dbm.executeQuery(
         ("INSERT INTO recipe (name, description, ingredient, recipe) VALUES "
@@ -64,7 +66,7 @@ class RecipeDB {
             .c_str());
   }
 
-  // Greeter.h의 case 주석 해제
+
   void deleteRecipe() {
     std::string menu_recipe;
     std::cout << "Input Target Recipe Name : ";
@@ -73,7 +75,7 @@ class RecipeDB {
         ("DELETE FROM recipe WHERE recipe='" + menu_recipe + "';").c_str());
   }
 
-  // num변수를 입력받아서 한 번에 여러 개 update할 수 있게 할까?
+
   void updateRecipe() {
     std::string item, content, menu_recipe;
     std::cout << "Input Target Recipe Name : ";

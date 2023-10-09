@@ -2,12 +2,14 @@
 
 #include <iostream>
 #include <set>
+#include "Plan.h"
+#include "Recipe.h"
 
 #include "sqlite/sqlite3.h"
 
 class DatabaseManager {
  public:
-  int rc;  // SQLite3 리턴 코드
+  int rc;// SQLite3 리턴 코드
 
   DatabaseManager(const char *dbName) {
     rc = sqlite3_open(dbName, &db);
@@ -18,17 +20,17 @@ class DatabaseManager {
 
   ~DatabaseManager() { sqlite3_close(db); }
 
-  // 출력용
+  //아닐때는 이걸 사용
   void executeQuery(const char *query) {
     char *errMsg = nullptr;
-    rc = sqlite3_exec(db, query, callback, nullptr, &errMsg);
+    rc = sqlite3_exec(db, query, nullptr, nullptr, &errMsg);
     if (rc != SQLITE_OK) {
-      std::cerr << "Error: " << errMsg << std::endl;
+      std::cerr << "Error : " << errMsg << std::endl;
       sqlite3_free(errMsg);
     }
   }
 
-  // Meal Class Type으로 받아올 때는 이걸 사용
+  //Recipe, plan Class Type으로 받아올 때는 이걸 사용
   void executeQuery(const char *query, void *data) {
     char *errMsg = nullptr;
     rc = sqlite3_exec(db, query, getterCallback, data, &errMsg);
@@ -38,25 +40,70 @@ class DatabaseManager {
     }
   }
 
+  //Vector로 받아올 때는 이걸 사용
+  void executeQuery(const char *query, void *data, int) {
+    char *errMsg = nullptr;
+    rc = sqlite3_exec(db, query, vectorCallback, data, &errMsg);
+    if (rc != SQLITE_OK) {
+      std::cerr << "Error : " << errMsg << std::endl;
+      sqlite3_free(errMsg);
+    }
+  }
+
  private:
   sqlite3 *db;
 
-  // 출력용, Recipe_id, Plan_id는 제외
-  static int callback(void *data, int argc, char **argv, char **azColName) {
-    std::cout << "----------------------------------------" << std::endl;
-    for (int i = 1; i < argc; i++) {
-      std::cout << azColName[i] << ": " << (argv[i] ? argv[i] : "NULL")
-                << std::endl;
+  //argc가 5면 Recipe, 6이면 Plan type으로.
+  static int getterCallback(void *data, int argc, char **argv, char **azColName) {
+
+    //RecipeDB 전체
+    if (argc == 5) {
+      Recipe *recipe = static_cast<Recipe *>(data);
+      recipe->setMenuName(argv[1] ? argv[1] : "NULL");
+      recipe->setMenuDescription(argv[2] ? argv[2] : "NULL");
+      recipe->setMenuIngredient(argv[3] ? argv[3] : "NULL");
+      recipe->setMenuRecipe(argv[4] ? argv[4] : "NULL");
+
     }
-    std::cout << "----------------------------------------" << std::endl;
+
+    //PlanDB 전체
+    if (argc == 6) {
+      Plan *plan = static_cast<Plan *>(data);
+      plan->setName(argv[1] ? argv[1] : "NULL");
+      plan->setDate(argv[2] ? argv[2] : "NULL");
+      plan->setBreakfast(argv[3] ? argv[3] : "NULL");
+      plan->setLunch(argv[4] ? argv[4] : "NULL");
+      plan->setDinner(argv[5] ? argv[5] : "NULL");
+    }
+
     return 0;
   }
 
-  // set 타입으로 가져오는 용도, select name일 경우에.
-  static int getterCallback(void *data, int argc, char **argv,
-                            char **azColName) {
-    std::set<std::string> *temp = (std::set<std::string> *)data;
-    temp->insert(argv[1]);
+  //Vector로 받아올 때는 이걸 사용
+  static int vectorCallback(void *data, int argc, char **argv, char **azColName) {
+    //RecipeDB
+    if (argc == 5) {
+      std::vector<Recipe> *recipe = static_cast<std::vector<Recipe> *>(data);
+      Recipe temp;
+      temp.setMenuName(argv[1] ? argv[1] : "NULL");
+      temp.setMenuDescription(argv[2] ? argv[2] : "NULL");
+      temp.setMenuIngredient(argv[3] ? argv[3] : "NULL");
+      temp.setMenuRecipe(argv[4] ? argv[4] : "NULL");
+      recipe->push_back(temp);
+    }
+
+    //PlanDB
+    if (argc == 6) {
+      std::vector<Plan> *plan = static_cast<std::vector<Plan> *>(data);
+      Plan temp;
+      temp.setName(argv[1] ? argv[1] : "NULL");
+      temp.setDate(argv[2] ? argv[2] : "NULL");
+      temp.setBreakfast(argv[3] ? argv[3] : "NULL");
+      temp.setLunch(argv[4] ? argv[4] : "NULL");
+      temp.setDinner(argv[5] ? argv[5] : "NULL");
+      plan->push_back(temp);
+    }
+
     return 0;
   }
 };
