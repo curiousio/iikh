@@ -66,13 +66,47 @@ class PlanDB {
   }
 
   void addPlan() {
+    std::cout << "Select a Mode (1. Add Date Plan, 2. Add Name Plan): ";
+    int selectNum;
+    std::cin >> selectNum;
+    std::cin.ignore();  // 개행 문자 제거.
+    system("cls");
+    switch (selectNum) {
+      case 1: addDatePlan();
+        break;
+      case 2: addNamePlan();
+        break;
+      default:std::cout << "Wrong Input" << std::endl;
+        break;
+    }
+  }
+
+  void addNamePlan() {
     std::string planName;
-    std::string planDate;
     std::string planBreakfast;
     std::string planLunch;
     std::string planDinner;
     std::cout << "Input Plan Name: ";
     std::getline(std::cin, planName);
+
+    std::cout << "Input breakfast: ";
+    std::getline(std::cin, planBreakfast);
+    std::cout << "Input lunch: ";
+    std::getline(std::cin, planLunch);
+    std::cout << "Input dinner: ";
+    std::getline(std::cin, planDinner);
+    // insert문, plan_id, date는 NULL로 세팅
+    dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, '" + planName +
+        "', NULL, '" + planBreakfast + "', '" + planLunch +
+        "', '" + planDinner + "');")
+                         .c_str());
+  }
+
+  void addDatePlan() {
+    std::string planDate;
+    std::string planBreakfast;
+    std::string planLunch;
+    std::string planDinner;
     std::cout << "Input Date(YYYYMMDD): ";
     std::getline(std::cin, planDate);
     std::cout << "Input breakfast: ";
@@ -81,8 +115,8 @@ class PlanDB {
     std::getline(std::cin, planLunch);
     std::cout << "Input dinner: ";
     std::getline(std::cin, planDinner);
-    // insert문, plan_id는 NULL로 세팅
-    dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, '" + planName + "', '" +
+    // insert문, plan_id, name은 NULL로 세팅
+    dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, NULL, '" +
         planDate + "', '" + planBreakfast + "', '" + planLunch +
         "', '" + planDinner + "');")
                          .c_str());

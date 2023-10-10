@@ -33,6 +33,7 @@ class Greeter {
     }
     std::cout << "Select Menu: ";
     std::cin >> selectNum;
+    std::cin.ignore(); //개행문자 제거.
     system("cls");
     std::cout << "Selected Menu: " << menu[selectNum - 1] << std::endl;
 
