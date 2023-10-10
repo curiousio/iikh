@@ -87,7 +87,7 @@ class RecipeDB {
 
   void deleteRecipe() {
     std::string menu_recipe;
-    std::cout << "Input Target Recipe Name : ";
+    std::cout << "Input Target Recipe Name: ";
     std::getline(std::cin, menu_recipe);
     dbm.executeQuery(
         ("DELETE FROM recipe WHERE recipe='" + menu_recipe + "';").c_str());
@@ -95,11 +95,30 @@ class RecipeDB {
 
   void updateRecipe() {
     std::string item, content, menu_recipe;
-    std::cout << "Input Target Recipe Name : ";
+    std::cout << "Input Target Recipe Name: ";
     std::getline(std::cin, menu_recipe);
     std::cout << "What item do you want to update?(name, description, "
                  "ingredient, recipe) : ";
     std::getline(std::cin, item);
+    if (item == "recipe") {
+      std::cout << "Input Recipe Method (To finish, just press Enter)"
+                << std::endl;
+      int index = 1;
+      while (true) {
+        std::cout << "Step " << index << ": ";
+        std::string userInput;
+        std::getline(std::cin, userInput);
+        if (userInput.compare("") == 0) {
+          break;
+        }
+        content += std::to_string(index++) + ". ";
+        content += userInput;
+        content += "\n";
+      }
+    } else {
+      std::cout << "What do you want to update it to?: ";
+      std::getline(std::cin, content);
+    }
     std::cout << "What do you want to update it to?: ";
     std::getline(std::cin, content);
     dbm.executeQuery(("UPDATE recipe SET " + item + "='" + content +
