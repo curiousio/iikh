@@ -102,8 +102,8 @@ class RecipeDB {
     std::string item, content, menu_recipe;
     std::cout << "Input Target Recipe Name: ";
     std::getline(std::cin, menu_recipe);
-    std::cout << "Which item do you want to update? (name, breakfast, "
-                 "lunch, dinner): ";
+    std::cout << "What would you like to change? (name, description, "
+                 "ingredient, recipe): ";
     std::getline(std::cin, item);
     if (item == "recipe") {
       std::cout << "Input Recipe Method (To finish, just press Enter)"
