@@ -69,7 +69,6 @@ class PlanDB {
       std::cout << "Input Plan Date: ";
       std::string plan;
       std::getline(std::cin, plan);
-      std::cin.ignore();
       selectPlanByDate(plan);
     }
   }
@@ -94,7 +93,6 @@ class PlanDB {
       std::cout << "Input Plan Name: ";
       std::string plan;
       std::getline(std::cin, plan);
-      std::cin.ignore();
       selectPlanByName(plan);
     }
   }
