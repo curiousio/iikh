@@ -36,11 +36,11 @@ class Recipe {
     std::getline(std::cin, menu_description);
     std::cout << "Input Recipe Ingredient: ";
     std::getline(std::cin, menu_ingredient);
-    std::cout << "Input Recipe Recipe(Enter를 누르면 다음 입력으로 넘어가고, 마지막에 끝맺음은 온점 2개를 쓰시면 됩니다.\n"
-                 "순서를 나타내는 숫자를 적을 필요는 없습니다.): ";
+    std::cout << "Input Recipe Recipe(Enter : next, .. : End)\n";
     std::vector<std::string> temps;
     int idx = 1;
     while (true) {
+      std::cout << "Recipe Recipe " << idx << ": ";
       std::string temp;
       std::getline(std::cin, temp);
       if (temp == "..") {

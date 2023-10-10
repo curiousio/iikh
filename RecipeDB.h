@@ -17,7 +17,7 @@ class RecipeDB {
     // createTable
     dbm.executeQuery(
         "CREATE TABLE IF NOT EXISTS recipe (recipe_id INTEGER PRIMARY KEY "
-        "AUTO INCREMENT, name TEXT, description TEXT, ingredient TEXT, recipe "
+        "AUTOINCREMENT, name TEXT, description TEXT, ingredient TEXT, recipe "
         "TEXT);");
   }
 
