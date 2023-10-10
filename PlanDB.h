@@ -15,8 +15,6 @@ class PlanDB {
   DatabaseManager dbm;
   RecipeDB recipe_db_;
   std::set<std::string> RecipeName;
-  std::set<std::string> Date;
-  std::set<std::string> Name;
 
  public:
   PlanDB() : dbm("iikh.db") {
@@ -25,7 +23,12 @@ class PlanDB {
         "CREATE TABLE IF NOT EXISTS plan (plan_id INTEGER PRIMARY KEY "
         "AUTOINCREMENT, name TEXT, date TEXT, breakfast TEXT, lunch TEXT, "
         "dinner text);");
-    RecipeName = recipe_db_.getRecipeNames();
+  }
+
+  std::set<std::string> getSet() {
+    std::set<std::string> temp;
+    dbm.executeQuery("SELECT * FROM plan;", &temp, true);
+    return temp;
   }
 
   void searchPlan() {
@@ -200,6 +203,7 @@ class PlanDB {
     std::string planBreakfast;
     std::string planLunch;
     std::string planDinner;
+    RecipeName = recipe_db_.getRecipeNames();
     std::cout << "Input Plan Name: ";
     std::getline(std::cin, planName);
     //입력하고, Recipe목록에 없을때에는 return.
@@ -226,7 +230,6 @@ class PlanDB {
         "', NULL, '" + planBreakfast + "', '" + planLunch +
         "', '" + planDinner + "');")
                          .c_str());
-    Name.insert(planName);
   }
 
   void addDatePlan() {
@@ -234,7 +237,7 @@ class PlanDB {
     std::string planBreakfast;
     std::string planLunch;
     std::string planDinner;
-
+    RecipeName = recipe_db_.getRecipeNames();
     std::cout << "Input Date(YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
     std::cout << "Input breakfast: ";
@@ -260,7 +263,6 @@ class PlanDB {
         "', '" + planBreakfast + "', '" + planLunch + "', '" +
         planDinner + "');")
                          .c_str());
-    Date.insert(planDate);
   }
 
   void deletePlan() {
@@ -281,6 +283,7 @@ class PlanDB {
 
   void deleteNamePlan() {
     std::string planName;
+    std::set<std::string> Name = getSet();
     std::cout << "Input Target Plan Name: ";
     std::getline(std::cin, planName);
     if (Name.find(planName) == Name.end()) {
@@ -293,6 +296,7 @@ class PlanDB {
 
   void deleteDatePlan() {
     std::string planDate;
+    std::set<std::string> Date = getSet();
     std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
     if (Date.find(planDate) == Date.end()) {
       std::cout << "Wrong Input" << std::endl;
@@ -323,6 +327,7 @@ class PlanDB {
     std::string planDate;
     std::string item;
     std::string content;
+    std::set<std::string> Date = getSet();
     std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
     if (Date.find(planDate) == Date.end()) {
@@ -347,6 +352,7 @@ class PlanDB {
     std::string planName;
     std::string item;
     std::string content;
+    std::set<std::string> Name = getSet();
     std::cout << "Input Target Plan Name: ";
     std::getline(std::cin, planName);
     if (Name.find(planName) == Name.end()) {
