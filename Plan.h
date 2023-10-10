@@ -47,7 +47,7 @@ class Plan {
       std::cout << "Select a Meal (1. Breakfast, 2. Lunch, 3. Dinner): ";
       std::cin >> selectNum;
       std::cin.ignore();
-      if(selectNum >= 4) {
+      if (selectNum >= 4) {
         std::cout << "Wrong Input" << std::endl;
         return 0;
       }

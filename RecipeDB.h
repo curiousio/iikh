@@ -43,12 +43,18 @@ class RecipeDB {
     for (auto &recipe : recipes) {
       recipe.printNameAndDescription();
     }
-    std::cout << "Input Recipe Name: ";
-    std::string name;
-    std::cin >> name;
+    std::cout << "Do you want to see a specific recipe? (y/n): ";
+    char select;
+    std::cin >> select;
     std::cin.ignore();
-    //찾아서 있으면 selectRecipe 구현
-    selectRecipe(name);
+    if (select == 'y') {
+      std::cout << "Input Recipe Name: ";
+      std::string name;
+      std::cin >> name;
+      std::cin.ignore();
+      //찾아서 있으면 selectRecipe 구현
+      selectRecipe(name);
+    }
   }
 
   void selectRecipe() {
@@ -61,7 +67,7 @@ class RecipeDB {
     recipe.printRecipe();
   }
 
-  void selectRecipe(const std::string& name) {
+  void selectRecipe(const std::string &name) {
     Recipe recipe;
     dbm.executeQuery(
         ("SELECT * FROM recipe WHERE name = '" + name + "';").c_str(), &recipe);
@@ -79,7 +85,6 @@ class RecipeDB {
             .c_str());
   }
 
-
   void deleteRecipe() {
     std::string menu_recipe;
     std::cout << "Input Target Recipe Name : ";
@@ -87,7 +92,6 @@ class RecipeDB {
     dbm.executeQuery(
         ("DELETE FROM recipe WHERE recipe='" + menu_recipe + "';").c_str());
   }
-
 
   void updateRecipe() {
     std::string item, content, menu_recipe;
