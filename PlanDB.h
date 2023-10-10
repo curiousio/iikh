@@ -14,7 +14,7 @@ class PlanDB {
  private:
   DatabaseManager dbm;
   RecipeDB recipe_db_;
-  std::vector<std::string> RecipeName;
+  std::set<std::string> RecipeName;
 
  public:
   PlanDB() : dbm("iikh.db") {
@@ -23,7 +23,6 @@ class PlanDB {
         "CREATE TABLE IF NOT EXISTS plan (plan_id INTEGER PRIMARY KEY "
         "AUTOINCREMENT, name TEXT, date TEXT, breakfast TEXT, lunch TEXT, "
         "dinner text);");
-
     RecipeName = recipe_db_.getRecipeNames();
   }
 

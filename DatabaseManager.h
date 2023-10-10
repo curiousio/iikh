@@ -94,8 +94,9 @@ class DatabaseManager {
 
     //RecipeDB의 Name만 받아올때
     if (argc == 1) {
-      auto *recipeName = static_cast<std::vector<std::string> *>(data);
-      recipeName->push_back(argv[0] ? argv[0] : "NULL");
+        std::set<std::string> *recipeName =
+            static_cast<std::set<std::string> *>(data);
+        recipeName->insert(argv[0] ? argv[0] : "NULL");
     }
 
     //PlanDB

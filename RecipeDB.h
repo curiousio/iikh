@@ -129,8 +129,8 @@ class RecipeDB {
             .c_str());
   }
 
-  std::vector<std::string> getRecipeNames() {
-    std::vector<std::string> recipeNames;
+  std::set<std::string> getRecipeNames() {
+    std::set<std::string> recipeNames;
     dbm.executeQuery("SELECT name FROM recipe;", &recipeNames, true);
     return recipeNames;
   }
