@@ -380,6 +380,12 @@ class PlanDB {
     }
     std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
+    if(item == "name") {
+      if (Name.find(content) != Name.end()) {
+        std::cout << "Wrong Input" << std::endl;
+        return;
+      }
+    }
     dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
         "' WHERE name = '" + planName + "';")
                          .c_str());
