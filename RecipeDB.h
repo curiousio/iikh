@@ -25,6 +25,7 @@ class RecipeDB {
     std::cout << "Select a Mode (1. Print All 2. Select): ";
     int selectNum;
     std::cin >> selectNum;
+    std::cin.ignore();
     system("cls");
     switch (selectNum) {
       case 1:printAllRecipe();

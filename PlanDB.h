@@ -15,6 +15,8 @@ class PlanDB {
   DatabaseManager dbm;
   RecipeDB recipe_db_;
   std::set<std::string> RecipeName;
+  std::set<std::string> Date;
+  std::set<std::string> Name;
 
  public:
   PlanDB() : dbm("iikh.db") {
@@ -234,6 +236,7 @@ class PlanDB {
                       "', NULL, '" + planBreakfast + "', '" + planLunch +
                       "', '" + planDinner + "');")
                          .c_str());
+    Name.insert(planName);
   }
 
   void addDatePlan() {
@@ -267,6 +270,7 @@ class PlanDB {
                       "', '" + planBreakfast + "', '" + planLunch + "', '" +
                       planDinner + "');")
                          .c_str());
+    Date.insert(planDate);
   }
 
   void deletePlan() {
@@ -292,6 +296,10 @@ class PlanDB {
     std::string planName;
     std::cout << "Input Target Plan Name: ";
     std::getline(std::cin, planName);
+    if(Name.find(planName) == Name.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
     dbm.executeQuery(
         ("DELETE FROM plan WHERE name='" + planName + "';").c_str());
   }
@@ -299,6 +307,10 @@ class PlanDB {
   void deleteDatePlan() {
     std::string planDate;
     std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
+    if(Date.find(planDate) == Date.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
     std::getline(std::cin, planDate);
     dbm.executeQuery(
         ("DELETE FROM plan WHERE date='" + planDate + "';").c_str());
@@ -329,9 +341,17 @@ class PlanDB {
     std::string content;
     std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
+    if(Date.find(planDate) == Date.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
     std::cout << "Which item do you want to update? (breakfast, "
                  "lunch, dinner): ";
     std::getline(std::cin, item);
+    if(item != "breakfast" && item != "lunch" && item != "dinner") {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
     std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
     dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
@@ -345,9 +365,17 @@ class PlanDB {
     std::string content;
     std::cout << "Input Target Plan Name: ";
     std::getline(std::cin, planName);
+    if(Name.find(planName) == Name.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
     std::cout << "Which item do you want to update? (name, breakfast, "
                  "lunch, dinner): ";
     std::getline(std::cin, item);
+    if(item != "name" && item != "breakfast" && item != "lunch" && item != "dinner") {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
     std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
     dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
