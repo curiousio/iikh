@@ -90,19 +90,33 @@ class RecipeDB {
 
   void deleteRecipe() {
     std::string menu_recipe;
+    std::set<std::string> recipeNames = getRecipeNames();
     std::cout << "Input Target Recipe Name: ";
     std::getline(std::cin, menu_recipe);
+    if(recipeNames.find(menu_recipe) == recipeNames.end()) {
+        std::cout << "Wrong Input" << std::endl;
+        return;
+    }
     dbm.executeQuery(
         ("DELETE FROM recipe WHERE name='" + menu_recipe + "';").c_str());
   }
 
   void updateRecipe() {
     std::string item, content, menu_recipe;
+    std::set<std::string> recipeNames = getRecipeNames();
     std::cout << "Input Target Recipe Name: ";
     std::getline(std::cin, menu_recipe);
+    if(recipeNames.find(menu_recipe) == recipeNames.end()) {
+        std::cout << "Wrong Input" << std::endl;
+        return;
+    }
     std::cout << "What would you like to change? (name, description, "
                  "ingredient, recipe): ";
     std::getline(std::cin, item);
+    if(item != "name" && item != "description" && item != "ingredient" && item != "recipe") {
+        std::cout << "Wrong Input" << std::endl;
+        return;
+    }
     if (item == "recipe") {
       std::cout << "Input Recipe Method (To finish, just press Enter)"
                 << std::endl;

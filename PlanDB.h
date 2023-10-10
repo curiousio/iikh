@@ -304,11 +304,11 @@ class PlanDB {
     std::string planDate;
     std::set<std::string> Date = getDates();
     std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
+    std::getline(std::cin, planDate);
     if (Date.find(planDate) == Date.end()) {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
-    std::getline(std::cin, planDate);
     dbm.executeQuery(
         ("DELETE FROM plan WHERE date='" + planDate + "';").c_str());
   }
