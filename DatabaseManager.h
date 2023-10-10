@@ -92,6 +92,12 @@ class DatabaseManager {
       recipe->push_back(temp);
     }
 
+    //RecipeDB의 Name만 받아올때
+    if (argc == 1) {
+      auto *recipeName = static_cast<std::vector<std::string> *>(data);
+      recipeName->push_back(argv[0] ? argv[0] : "NULL");
+    }
+
     //PlanDB
     if (argc == 6) {
       std::vector<Plan> *plan = static_cast<std::vector<Plan> *>(data);

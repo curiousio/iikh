@@ -64,6 +64,10 @@ class Recipe {
   }
 
   void printRecipe() {
+    if(menuName.empty()) {
+      std::cout << "No Recipe" << std::endl;
+      return;
+    }
     std::cout << "----------------------------------------" << std::endl;
     std::cout << "Name: " << menuName << std::endl;
     std::cout << "Description: " << menuDescription << std::endl;

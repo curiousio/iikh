@@ -40,6 +40,10 @@ class RecipeDB {
     std::cout << "All Recipe" << std::endl;
     std::vector<Recipe> recipes;
     dbm.executeQuery("SELECT * FROM recipe;", &recipes, true);
+    if(recipes.empty()) {
+        std::cout << "No Recipe" << std::endl;
+        return;
+    }
     for (auto &recipe : recipes) {
       recipe.printNameAndDescription();
     }
@@ -90,7 +94,7 @@ class RecipeDB {
     std::cout << "Input Target Recipe Name: ";
     std::getline(std::cin, menu_recipe);
     dbm.executeQuery(
-        ("DELETE FROM recipe WHERE recipe='" + menu_recipe + "';").c_str());
+        ("DELETE FROM recipe WHERE name='" + menu_recipe + "';").c_str());
   }
 
   void updateRecipe() {
@@ -119,10 +123,15 @@ class RecipeDB {
       std::cout << "What do you want to update it to?: ";
       std::getline(std::cin, content);
     }
-    std::cout << "What do you want to update it to?: ";
-    std::getline(std::cin, content);
-    dbm.executeQuery(("UPDATE recipe SET " + item + "='" + content +
-        "' WHERE recipe=" + menu_recipe)
-                         .c_str());
+    dbm.executeQuery(
+        ("UPDATE recipe SET " + item + " = '" + content + "' WHERE name = '" +
+            menu_recipe + "';")
+            .c_str());
+  }
+
+  std::vector<std::string> getRecipeNames() {
+    std::vector<std::string> recipeNames;
+    dbm.executeQuery("SELECT name FROM recipe;", &recipeNames, true);
+    return recipeNames;
   }
 };

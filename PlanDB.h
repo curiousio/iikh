@@ -1,11 +1,10 @@
 #pragma once
 
-#include <chrono>
-#include <iomanip>
 #include <iostream>
 #include <set>
 #include <utility>
 #include <vector>
+#include <algorithm>
 
 #include "DatabaseManager.h"
 #include "Plan.h"
@@ -15,6 +14,7 @@ class PlanDB {
  private:
   DatabaseManager dbm;
   RecipeDB recipe_db_;
+  std::vector<std::string> RecipeName;
 
  public:
   PlanDB() : dbm("iikh.db") {
@@ -23,6 +23,8 @@ class PlanDB {
         "CREATE TABLE IF NOT EXISTS plan (plan_id INTEGER PRIMARY KEY "
         "AUTOINCREMENT, name TEXT, date TEXT, breakfast TEXT, lunch TEXT, "
         "dinner text);");
+
+    RecipeName = recipe_db_.getRecipeNames();
   }
 
   void searchPlan() {
@@ -56,6 +58,10 @@ class PlanDB {
     std::vector<Plan> plans;
     dbm.executeQuery("SELECT * FROM plan WHERE date IS NOT NULL;", &plans,
                      true);
+    if(plans.empty()) {
+        std::cout << "No Date Plan" << std::endl;
+        return;
+    }
     for (auto &plan : plans) {
       plan.printPlanDate();
     }
@@ -77,6 +83,10 @@ class PlanDB {
     std::vector<Plan> plans;
     dbm.executeQuery("SELECT * FROM plan WHERE name IS NOT NULL;", &plans,
                      true);
+    if(plans.empty()) {
+        std::cout << "No Name Plan" << std::endl;
+        return;
+    }
     for (auto &plan : plans) {
       plan.printPlanName();
     }
@@ -201,13 +211,25 @@ class PlanDB {
     std::string planDinner;
     std::cout << "Input Plan Name: ";
     std::getline(std::cin, planName);
-
+    //입력하고, Recipe목록에 없을때에는 return.
     std::cout << "Input breakfast: ";
     std::getline(std::cin, planBreakfast);
+    if(std::find(RecipeName.begin(), RecipeName.end(), planBreakfast) == RecipeName.end()) {
+        std::cout << "Wrong Input" << std::endl;
+        return;
+    }
     std::cout << "Input lunch: ";
     std::getline(std::cin, planLunch);
+    if(std::find(RecipeName.begin(), RecipeName.end(), planLunch) == RecipeName.end()) {
+        std::cout << "Wrong Input" << std::endl;
+        return;
+    }
     std::cout << "Input dinner: ";
     std::getline(std::cin, planDinner);
+    if(std::find(RecipeName.begin(), RecipeName.end(), planDinner) == RecipeName.end()) {
+        std::cout << "Wrong Input" << std::endl;
+        return;
+    }
     // insert문, plan_id, date는 NULL로 세팅
     dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, '" + planName +
                       "', NULL, '" + planBreakfast + "', '" + planLunch +
@@ -225,10 +247,22 @@ class PlanDB {
     std::getline(std::cin, planDate);
     std::cout << "Input breakfast: ";
     std::getline(std::cin, planBreakfast);
+    if(std::find(RecipeName.begin(), RecipeName.end(), planBreakfast) == RecipeName.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
     std::cout << "Input lunch: ";
     std::getline(std::cin, planLunch);
+    if(std::find(RecipeName.begin(), RecipeName.end(), planLunch) == RecipeName.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
     std::cout << "Input dinner: ";
     std::getline(std::cin, planDinner);
+    if(std::find(RecipeName.begin(), RecipeName.end(), planDinner) == RecipeName.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
     // insert문, plan_id, name은 NULL로 세팅
     dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, NULL, '" + planDate +
                       "', '" + planBreakfast + "', '" + planLunch + "', '" +
@@ -301,8 +335,8 @@ class PlanDB {
     std::getline(std::cin, item);
     std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
-    dbm.executeQuery(("UPDATE plan SET " + item + "='" + content +
-                      "' WHERE date= '" + planDate + "';")
+    dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
+                      "' WHERE date = '" + planDate + "';")
                          .c_str());
   }
 
@@ -317,8 +351,8 @@ class PlanDB {
     std::getline(std::cin, item);
     std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
-    dbm.executeQuery(("UPDATE plan SET " + item + "='" + content +
-        "' WHERE name= '" + planName + "';")
+    dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
+        "' WHERE name = '" + planName + "';")
                          .c_str());
   }
 };
