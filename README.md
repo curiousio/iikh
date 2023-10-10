@@ -31,7 +31,7 @@ git checkout v1.0.0
 
 ## Execution
 
-* ### Linux/GCC
+### Linux/G++
 
 Build from the source and run the application.
 
@@ -39,12 +39,11 @@ Build from the source and run the application.
 g++ main.cpp -l sqlite3
 ./a.out
 ```
-* Warning : Becuase Linux's System Call is different from Windows, You can see the Error or Warning when you execute the program.
-* Please Modify system() before executing program. 
 
-*****
+* Warning: Because Linux's system call is different from Windows, you can see the error or warning when executing the program.
+* Please modify `system()` before executing program.
 
-* ### Windows/MSVC
+### Windows/MSVC
 
 1. Make New C++ Empty Project
 2. Copy the `sqlite` directory into `Header Files` and the source code into `Source Files`
