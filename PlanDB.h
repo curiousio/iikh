@@ -25,9 +25,15 @@ class PlanDB {
         "dinner text);");
   }
 
-  std::set<std::string> getSet() {
+  std::set<std::string> getNames() {
     std::set<std::string> temp;
-    dbm.executeQuery("SELECT * FROM plan;", &temp, true);
+    dbm.executeQuery("SELECT name FROM plan WHERE name IS NOT NULL;", &temp, true);
+    return temp;
+  }
+
+  std::set<std::string> getDates() {
+    std::set<std::string> temp;
+    dbm.executeQuery("SELECT date FROM plan WHERE date IS NOT NULL;", &temp, true);
     return temp;
   }
 
@@ -283,7 +289,7 @@ class PlanDB {
 
   void deleteNamePlan() {
     std::string planName;
-    std::set<std::string> Name = getSet();
+    std::set<std::string> Name = getNames();
     std::cout << "Input Target Plan Name: ";
     std::getline(std::cin, planName);
     if (Name.find(planName) == Name.end()) {
@@ -296,7 +302,7 @@ class PlanDB {
 
   void deleteDatePlan() {
     std::string planDate;
-    std::set<std::string> Date = getSet();
+    std::set<std::string> Date = getDates();
     std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
     if (Date.find(planDate) == Date.end()) {
       std::cout << "Wrong Input" << std::endl;
@@ -327,7 +333,7 @@ class PlanDB {
     std::string planDate;
     std::string item;
     std::string content;
-    std::set<std::string> Date = getSet();
+    std::set<std::string> Date = getDates();
     std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
     if (Date.find(planDate) == Date.end()) {
@@ -352,7 +358,7 @@ class PlanDB {
     std::string planName;
     std::string item;
     std::string content;
-    std::set<std::string> Name = getSet();
+    std::set<std::string> Name = getNames();
     std::cout << "Input Target Plan Name: ";
     std::getline(std::cin, planName);
     if (Name.find(planName) == Name.end()) {

@@ -92,11 +92,10 @@ class DatabaseManager {
       recipe->push_back(temp);
     }
 
-    //RecipeDB의 Name만 받아올때
+    //RecipeDB의 Name, PlanDB의 Name, Date만 받아올때
     if (argc == 1) {
-        std::set<std::string> *recipeName =
-            static_cast<std::set<std::string> *>(data);
-        recipeName->insert(argv[0] ? argv[0] : "NULL");
+        std::set<std::string> *name = static_cast<std::set<std::string> *>(data);
+        name->insert(argv[0] ? argv[0] : "NULL");
     }
 
     //PlanDB
