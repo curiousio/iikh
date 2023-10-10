@@ -1,11 +1,11 @@
 #pragma once
 
+#include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <set>
 #include <utility>
 #include <vector>
-#include <chrono>
-#include <iomanip>
 
 #include "DatabaseManager.h"
 #include "Plan.h"
@@ -15,6 +15,7 @@ class PlanDB {
  private:
   DatabaseManager dbm;
   RecipeDB recipe_db_;
+
  public:
   PlanDB() : dbm("iikh.db") {
     // createTable
@@ -23,22 +24,29 @@ class PlanDB {
         "AUTOINCREMENT, name TEXT, date TEXT, breakfast TEXT, lunch TEXT, "
         "dinner text);");
   }
+
   void searchPlan() {
-    std::cout << "Select a Mode (1. Print All Date Plan, 2. Print ALl Name Plan 3. Select Date, 4. Select Name): ";
+    std::cout << "Select a Mode (1. Print All Date Plan, 2. Print All Name "
+                 "Plan 3. Select Date, 4. Select Name): ";
     int selectNum;
     std::cin >> selectNum;
     std::cin.ignore();  // 개행 문자 제거.
     system("cls");
     switch (selectNum) {
-      case 1: printAllPlanByDate();
+      case 1:
+        printAllPlanByDate();
         break;
-      case 2: printAllPlanByName();
+      case 2:
+        printAllPlanByName();
         break;
-      case 3: selectPlanByDate();
+      case 3:
+        selectPlanByDate();
         break;
-      case 4: selectPlanByName();
+      case 4:
+        selectPlanByName();
         break;
-      default:std::cout << "Wrong Input" << std::endl;
+      default:
+        std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -46,11 +54,12 @@ class PlanDB {
   void printAllPlanByDate() {
     std::cout << "All Plan" << std::endl;
     std::vector<Plan> plans;
-    dbm.executeQuery("SELECT * FROM plan WHERE date IS NOT NULL;", &plans, true);
+    dbm.executeQuery("SELECT * FROM plan WHERE date IS NOT NULL;", &plans,
+                     true);
     for (auto &plan : plans) {
       plan.printPlanDate();
     }
-    std::cout << "Do you want to see a specific plan? (y/n): ";
+    std::cout << "Do you want to see a specific plan? [y/n]: ";
     char select;
     std::cin >> select;
     std::cin.ignore();
@@ -66,11 +75,12 @@ class PlanDB {
   void printAllPlanByName() {
     std::cout << "All Plan" << std::endl;
     std::vector<Plan> plans;
-    dbm.executeQuery("SELECT * FROM plan WHERE name IS NOT NULL;", &plans, true);
+    dbm.executeQuery("SELECT * FROM plan WHERE name IS NOT NULL;", &plans,
+                     true);
     for (auto &plan : plans) {
       plan.printPlanName();
     }
-    std::cout << "Do you want to see a specific plan? (y/n): ";
+    std::cout << "Do you want to see a specific plan? [y/n]: ";
     char select;
     std::cin >> select;
     std::cin.ignore();
@@ -172,11 +182,14 @@ class PlanDB {
     std::cin.ignore();  // 개행 문자 제거.
     system("cls");
     switch (selectNum) {
-      case 1: addDatePlan();
+      case 1:
+        addDatePlan();
         break;
-      case 2: addNamePlan();
+      case 2:
+        addNamePlan();
         break;
-      default:std::cout << "Wrong Input" << std::endl;
+      default:
+        std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -197,8 +210,8 @@ class PlanDB {
     std::getline(std::cin, planDinner);
     // insert문, plan_id, date는 NULL로 세팅
     dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, '" + planName +
-        "', NULL, '" + planBreakfast + "', '" + planLunch +
-        "', '" + planDinner + "');")
+                      "', NULL, '" + planBreakfast + "', '" + planLunch +
+                      "', '" + planDinner + "');")
                          .c_str());
   }
 
@@ -217,9 +230,9 @@ class PlanDB {
     std::cout << "Input dinner: ";
     std::getline(std::cin, planDinner);
     // insert문, plan_id, name은 NULL로 세팅
-    dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, NULL, '" +
-        planDate + "', '" + planBreakfast + "', '" + planLunch +
-        "', '" + planDinner + "');")
+    dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, NULL, '" + planDate +
+                      "', '" + planBreakfast + "', '" + planLunch + "', '" +
+                      planDinner + "');")
                          .c_str());
   }
 
@@ -230,11 +243,14 @@ class PlanDB {
     std::cin.ignore();  // 개행 문자 제거.
     system("cls");
     switch (selectNum) {
-      case 1: deleteDatePlan();
+      case 1:
+        deleteDatePlan();
         break;
-      case 2: deleteNamePlan();
+      case 2:
+        deleteNamePlan();
         break;
-      default:std::cout << "Wrong Input" << std::endl;
+      default:
+        std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -249,7 +265,7 @@ class PlanDB {
 
   void deleteDatePlan() {
     std::string planDate;
-    std::cout << "Input Target Plan Date: ";
+    std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
     dbm.executeQuery(
         ("DELETE FROM plan WHERE date='" + planDate + "';").c_str());
@@ -262,11 +278,14 @@ class PlanDB {
     std::cin.ignore();  // 개행 문자 제거.
     system("cls");
     switch (selectNum) {
-      case 1: updateDatePlan();
+      case 1:
+        updateDatePlan();
         break;
-      case 2: updateNamePlan();
+      case 2:
+        updateNamePlan();
         break;
-      default:std::cout << "Wrong Input" << std::endl;
+      default:
+        std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -275,15 +294,15 @@ class PlanDB {
     std::string planDate;
     std::string item;
     std::string content;
-    std::cout << "Input Target Plan Date: ";
+    std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
-    std::cout << "What item do you want to update? (breakfast, "
+    std::cout << "Which item do you want to update? (breakfast, "
                  "lunch, dinner): ";
     std::getline(std::cin, item);
-    std::cout << "What do you want to update it to?: ";
+    std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
     dbm.executeQuery(("UPDATE plan SET " + item + "='" + content +
-        "' WHERE date= '" + planDate + "';")
+                      "' WHERE date= '" + planDate + "';")
                          .c_str());
   }
 
@@ -293,13 +312,13 @@ class PlanDB {
     std::string content;
     std::cout << "Input Target Plan Name: ";
     std::getline(std::cin, planName);
-    std::cout << "What item do you want to update? (name, breakfast, "
+    std::cout << "Which item do you want to update? (name, breakfast, "
                  "lunch, dinner): ";
     std::getline(std::cin, item);
-    std::cout << "What do you want to update it to?: ";
+    std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
     dbm.executeQuery(("UPDATE plan SET " + item + "='" + content +
-        "' WHERE plan= '" + planName + "';")
+        "' WHERE name= '" + planName + "';")
                          .c_str());
   }
 };
