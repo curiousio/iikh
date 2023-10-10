@@ -265,7 +265,7 @@ class PlanDB {
 
   void deleteDatePlan() {
     std::string planDate;
-    std::cout << "Input Target Plan Date: ";
+    std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
     dbm.executeQuery(
         ("DELETE FROM plan WHERE date='" + planDate + "';").c_str());
@@ -294,7 +294,7 @@ class PlanDB {
     std::string planDate;
     std::string item;
     std::string content;
-    std::cout << "Input Target Plan Date: ";
+    std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
     std::cout << "Which item do you want to update? (breakfast, "
                  "lunch, dinner): ";
@@ -318,7 +318,7 @@ class PlanDB {
     std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
     dbm.executeQuery(("UPDATE plan SET " + item + "='" + content +
-                      "' WHERE plan= '" + planName + "';")
+        "' WHERE name= '" + planName + "';")
                          .c_str());
   }
 };
