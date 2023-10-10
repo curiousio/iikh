@@ -55,7 +55,7 @@ class RecipeDB {
     if (select == 'y') {
       std::cout << "Input Recipe Name: ";
       std::string name;
-      std::cin >> name;
+      std::getline(std::cin, name);
       std::cin.ignore();
       //찾아서 있으면 selectRecipe 구현
       selectRecipe(name);
