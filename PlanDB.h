@@ -340,15 +340,21 @@ class PlanDB {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
-    std::cout << "Which item do you want to update? (breakfast, "
+    std::cout << "Which item do you want to update? (date, breakfast, "
                  "lunch, dinner): ";
     std::getline(std::cin, item);
-    if (item != "breakfast" && item != "lunch" && item != "dinner") {
+    if (item != "date" && item != "breakfast" && item != "lunch" && item != "dinner") {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
     std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
+    if(item == "date") {
+      if (Date.find(content) != Date.end()) {
+        std::cout << "Wrong Input" << std::endl;
+        return;
+      }
+    }
     dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
         "' WHERE date = '" + planDate + "';")
                          .c_str());
