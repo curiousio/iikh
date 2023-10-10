@@ -6,12 +6,14 @@
 
 #include "DatabaseManager.h"
 #include "RecipeDB.h"
+#include "PlanDB.h"
 #include "sqlite/sqlite3.h"
 
 class Greeter {
  private:
   std::vector<std::string> menu;
   RecipeDB recipeDB;
+  PlanDB planDB;
 
  public:
   Greeter() {
@@ -46,17 +48,13 @@ class Greeter {
         break;
       case 4:recipeDB.updateRecipe();
         break;
-      case 5:
-        // searchPlan();
+      case 5:planDB.searchPlan();
         break;
-      case 6:
-        // addPlan();
+      case 6:planDB.addPlan();
         break;
-      case 7:
-        // deletePlan();
+      case 7:planDB.deletePlan();
         break;
-      case 8:
-        // updatePlan();
+      case 8:planDB.updatePlan();
         break;
       case 9:quit();
         break;
@@ -65,7 +63,7 @@ class Greeter {
     }
   }
 
-  void quit() {
+  static void quit() {
     std::cout << "Bye" << std::endl;
     exit(0);
   }

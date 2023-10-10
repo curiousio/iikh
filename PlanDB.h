@@ -12,6 +12,7 @@
 class PlanDB {
  private:
   DatabaseManager dbm;
+  RecipeDB recipe_db_;
  public:
   PlanDB() : dbm("iikh.db") {
     // createTable
@@ -21,7 +22,7 @@ class PlanDB {
         "dinner text);");
   }
   void searchPlan() {
-    std::cout << "Select a Mode (1. Print All Date Plan, 2. Print ALl Name Plan 3. Select): ";
+    std::cout << "Select a Mode (1. Print All Date Plan, 2. Print ALl Name Plan 3. Select Date, 4. Select Name): ";
     int selectNum;
     std::cin >> selectNum;
     std::cin.ignore();  // 개행 문자 제거.
@@ -30,7 +31,10 @@ class PlanDB {
       case 1: printAllPlanByDate();
         break;
       case 2: printAllPlanByName();
-      case 3: selectPlan();
+        break;
+      case 3: selectPlanByDate();
+        break;
+      case 4: selectPlanByName();
         break;
       default:std::cout << "Wrong Input" << std::endl;
         break;
@@ -44,6 +48,17 @@ class PlanDB {
     for (auto &plan : plans) {
       plan.printPlanDate();
     }
+    std::cout << "Do you want to see a specific plan? (y/n): ";
+    char select;
+    std::cin >> select;
+    std::cin.ignore();
+    if (select == 'y') {
+      std::cout << "Input Plan Date: ";
+      std::string plan;
+      std::cin >> plan;
+      std::cin.ignore();
+      selectPlanByDate(plan);
+    }
   }
 
   void printAllPlanByName() {
@@ -53,17 +68,101 @@ class PlanDB {
     for (auto &plan : plans) {
       plan.printPlanName();
     }
+    std::cout << "Do you want to see a specific plan? (y/n): ";
+    char select;
+    std::cin >> select;
+    std::cin.ignore();
+    if (select == 'y') {
+      std::cout << "Input Plan Name: ";
+      std::string plan;
+      std::cin >> plan;
+      std::cin.ignore();
+      selectPlanByName(plan);
+    }
   }
 
-  void selectPlan() {
+  void selectPlanByName() {
     Plan plan;
     std::string name;
     std::cout << "Input Plan Name: ";
     std::getline(std::cin, name);
     dbm.executeQuery(
         ("SELECT * FROM plan WHERE name = '" + name + "';").c_str(), &plan);
-    plan.printPlan();
+    int selectNum = plan.printPlan();
+    if(selectNum == 1) {
+      std::string breakfast = plan.getBreakfast();
+      recipe_db_.selectRecipe(breakfast);
+    } else if(selectNum == 2) {
+      std::string lunch = plan.getLunch();
+      recipe_db_.selectRecipe(lunch);
+    } else if(selectNum == 3) {
+      std::string dinner = plan.getDinner();
+      recipe_db_.selectRecipe(dinner);
+    } else {
+      return;
+    }
   }
+
+  void selectPlanByName(const std::string& name) {
+    Plan plan;
+    dbm.executeQuery(
+        ("SELECT * FROM plan WHERE name = '" + name + "';").c_str(), &plan);
+    int selectNum = plan.printPlan();
+    if(selectNum == 1) {
+      std::string breakfast = plan.getBreakfast();
+      recipe_db_.selectRecipe(breakfast);
+    } else if(selectNum == 2) {
+      std::string lunch = plan.getLunch();
+      recipe_db_.selectRecipe(lunch);
+    } else if(selectNum == 3) {
+      std::string dinner = plan.getDinner();
+      recipe_db_.selectRecipe(dinner);
+    } else {
+      return;
+    }
+  }
+
+  void selectPlanByDate() {
+    Plan plan;
+    std::string date;
+    std::cout << "Input Plan Date: ";
+    std::getline(std::cin, date);
+    dbm.executeQuery(
+        ("SELECT * FROM plan WHERE date = '" + date + "';").c_str(), &plan);
+    int selectNum = plan.printPlan();
+    if(selectNum == 1) {
+      std::string breakfast = plan.getBreakfast();
+      recipe_db_.selectRecipe(breakfast);
+    } else if(selectNum == 2) {
+      std::string lunch = plan.getLunch();
+      recipe_db_.selectRecipe(lunch);
+    } else if(selectNum == 3) {
+      std::string dinner = plan.getDinner();
+      recipe_db_.selectRecipe(dinner);
+    } else {
+      return;
+    }
+  }
+
+  void selectPlanByDate(const std::string& date) {
+    Plan plan;
+    dbm.executeQuery(
+        ("SELECT * FROM plan WHERE date = '" + date + "';").c_str(), &plan);
+    int selectNum = plan.printPlan();
+    if(selectNum == 1) {
+      std::string breakfast = plan.getBreakfast();
+      recipe_db_.selectRecipe(breakfast);
+    } else if(selectNum == 2) {
+      std::string lunch = plan.getLunch();
+      recipe_db_.selectRecipe(lunch);
+    } else if(selectNum == 3) {
+      std::string dinner = plan.getDinner();
+      recipe_db_.selectRecipe(dinner);
+    } else {
+      return;
+    }
+  }
+
 
   void addPlan() {
     std::cout << "Select a Mode (1. Add Date Plan, 2. Add Name Plan): ";

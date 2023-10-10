@@ -43,6 +43,12 @@ class RecipeDB {
     for (auto &recipe : recipes) {
       recipe.printNameAndDescription();
     }
+    std::cout << "Input Recipe Name: ";
+    std::string name;
+    std::cin >> name;
+    std::cin.ignore();
+    //찾아서 있으면 selectRecipe 구현
+    selectRecipe(name);
   }
 
   void selectRecipe() {
@@ -52,7 +58,14 @@ class RecipeDB {
     std::getline(std::cin, name);
     dbm.executeQuery(
         ("SELECT * FROM recipe WHERE name = '" + name + "';").c_str(), &recipe);
-    ;
+    recipe.printRecipe();
+  }
+
+  void selectRecipe(const std::string& name) {
+    Recipe recipe;
+    dbm.executeQuery(
+        ("SELECT * FROM recipe WHERE name = '" + name + "';").c_str(), &recipe);
+    recipe.printRecipe();
   }
 
   void addRecipe() {
