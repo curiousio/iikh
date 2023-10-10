@@ -30,7 +30,7 @@ class PlanDB {
       case 1: printAllPlanByDate();
         break;
       case 2: printAllPlanByName();
-      case 3:selectPlan();
+      case 3: selectPlan();
         break;
       default:std::cout << "Wrong Input" << std::endl;
         break;

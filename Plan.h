@@ -81,8 +81,8 @@ class Plan {
 
   void printPlan() {
     std::cout << "----------------------------------------" << std::endl;
-    std::cout << "Plan Name: " << planName << std::endl;
-    std::cout << "Date: " << date << std::endl;
+    if (planName != "NULL") { std::cout << "Plan Name: " << planName << std::endl; }
+    if (date != "NULL") { std::cout << "Date: " << date << std::endl; }
     std::cout << "Breakfast: " << Breakfast << std::endl;
     std::cout << "Lunch: " << Lunch << std::endl;
     std::cout << "Dinner: " << Dinner << std::endl;
