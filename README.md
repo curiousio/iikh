@@ -7,8 +7,7 @@ Interactive Intelligent Kitchen Helper (IIKH) is a simple CLI based meal planner
 ## Features
 
 * Recipe management
-* Plan management
-* Meal management
+* Plan management based on Recipe
 
 ## Requirements
 
@@ -32,14 +31,24 @@ git checkout v1.0.0
 
 ## Execution
 
+* ### Linux/GCC
+
 Build from the source and run the application.
 
 ```shell
 g++ main.cpp -l sqlite3
 ./a.out
 ```
+* Warning : Becuase Linux's System Call is different from Windows, You can see the Error or Warning when you execute the program.
+* Please Modify system() before executing program. 
 
-Copy the `sqlite` directory into `Header Files` and the source code into `Source Files` if you are using Microsoft Visual Studio.
+*****
+
+* ### Windows/MSVC
+
+1. Make New C++ Empty Project
+2. Copy the `sqlite` directory into `Header Files` and the source code into `Source Files`
+3. Bulid
 
 ## License
 
