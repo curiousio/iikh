@@ -1,10 +1,10 @@
 #pragma once
 
+#include <algorithm>
 #include <iostream>
 #include <set>
 #include <utility>
 #include <vector>
-#include <algorithm>
 
 #include "DatabaseManager.h"
 #include "Plan.h"
@@ -27,13 +27,15 @@ class PlanDB {
 
   std::set<std::string> getNames() {
     std::set<std::string> temp;
-    dbm.executeQuery("SELECT name FROM plan WHERE name IS NOT NULL;", &temp, true);
+    dbm.executeQuery("SELECT name FROM plan WHERE name IS NOT NULL;", &temp,
+                     true);
     return temp;
   }
 
   std::set<std::string> getDates() {
     std::set<std::string> temp;
-    dbm.executeQuery("SELECT date FROM plan WHERE date IS NOT NULL;", &temp, true);
+    dbm.executeQuery("SELECT date FROM plan WHERE date IS NOT NULL;", &temp,
+                     true);
     return temp;
   }
 
@@ -42,18 +44,23 @@ class PlanDB {
                  "Plan 3. Select Date, 4. Select Name): ";
     int selectNum;
     std::cin >> selectNum;
-    std::cin.ignore();  // 개행 문자 제거.
+    std::cin.ignore();  // 개행 문자 제거
     system("cls");
     switch (selectNum) {
-      case 1:printAllPlanByDate();
+      case 1:
+        printAllPlanByDate();
         break;
-      case 2:printAllPlanByName();
+      case 2:
+        printAllPlanByName();
         break;
-      case 3:selectPlanByDate();
+      case 3:
+        selectPlanByDate();
         break;
-      case 4:selectPlanByName();
+      case 4:
+        selectPlanByName();
         break;
-      default:std::cout << "Wrong Input" << std::endl;
+      default:
+        std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -192,14 +199,17 @@ class PlanDB {
     std::cout << "Select a Mode (1. Add Date Plan, 2. Add Name Plan): ";
     int selectNum;
     std::cin >> selectNum;
-    std::cin.ignore();  // 개행 문자 제거.
+    std::cin.ignore();  // 개행 문자 제거
     system("cls");
     switch (selectNum) {
-      case 1:addDatePlan();
+      case 1:
+        addDatePlan();
         break;
-      case 2:addNamePlan();
+      case 2:
+        addNamePlan();
         break;
-      default:std::cout << "Wrong Input" << std::endl;
+      default:
+        std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -212,29 +222,32 @@ class PlanDB {
     RecipeName = recipe_db_.getRecipeNames();
     std::cout << "Input Plan Name: ";
     std::getline(std::cin, planName);
-    //입력하고, Recipe목록에 없을때에는 return.
+    // 입력하고, Recipe 목록에 없을 때에는 return.
     std::cout << "Input breakfast: ";
     std::getline(std::cin, planBreakfast);
-    if (std::find(RecipeName.begin(), RecipeName.end(), planBreakfast) == RecipeName.end()) {
+    if (std::find(RecipeName.begin(), RecipeName.end(), planBreakfast) ==
+        RecipeName.end()) {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
     std::cout << "Input lunch: ";
     std::getline(std::cin, planLunch);
-    if (std::find(RecipeName.begin(), RecipeName.end(), planLunch) == RecipeName.end()) {
+    if (std::find(RecipeName.begin(), RecipeName.end(), planLunch) ==
+        RecipeName.end()) {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
     std::cout << "Input dinner: ";
     std::getline(std::cin, planDinner);
-    if (std::find(RecipeName.begin(), RecipeName.end(), planDinner) == RecipeName.end()) {
+    if (std::find(RecipeName.begin(), RecipeName.end(), planDinner) ==
+        RecipeName.end()) {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
     // insert문, plan_id, date는 NULL로 세팅
     dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, '" + planName +
-        "', NULL, '" + planBreakfast + "', '" + planLunch +
-        "', '" + planDinner + "');")
+                      "', NULL, '" + planBreakfast + "', '" + planLunch +
+                      "', '" + planDinner + "');")
                          .c_str());
   }
 
@@ -244,30 +257,33 @@ class PlanDB {
     std::string planLunch;
     std::string planDinner;
     RecipeName = recipe_db_.getRecipeNames();
-    std::cout << "Input Date(YYYY-MM-DD): ";
+    std::cout << "Input Date (YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
     std::cout << "Input breakfast: ";
     std::getline(std::cin, planBreakfast);
-    if (std::find(RecipeName.begin(), RecipeName.end(), planBreakfast) == RecipeName.end()) {
+    if (std::find(RecipeName.begin(), RecipeName.end(), planBreakfast) ==
+        RecipeName.end()) {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
     std::cout << "Input lunch: ";
     std::getline(std::cin, planLunch);
-    if (std::find(RecipeName.begin(), RecipeName.end(), planLunch) == RecipeName.end()) {
+    if (std::find(RecipeName.begin(), RecipeName.end(), planLunch) ==
+        RecipeName.end()) {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
     std::cout << "Input dinner: ";
     std::getline(std::cin, planDinner);
-    if (std::find(RecipeName.begin(), RecipeName.end(), planDinner) == RecipeName.end()) {
+    if (std::find(RecipeName.begin(), RecipeName.end(), planDinner) ==
+        RecipeName.end()) {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
     // insert문, plan_id, name은 NULL로 세팅
     dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, NULL, '" + planDate +
-        "', '" + planBreakfast + "', '" + planLunch + "', '" +
-        planDinner + "');")
+                      "', '" + planBreakfast + "', '" + planLunch + "', '" +
+                      planDinner + "');")
                          .c_str());
   }
 
@@ -275,14 +291,17 @@ class PlanDB {
     std::cout << "Select a Mode (1. Delete Date Plan, 2. Delete Name Plan): ";
     int selectNum;
     std::cin >> selectNum;
-    std::cin.ignore();  // 개행 문자 제거.
+    std::cin.ignore();  // 개행 문자 제거
     system("cls");
     switch (selectNum) {
-      case 1:deleteDatePlan();
+      case 1:
+        deleteDatePlan();
         break;
-      case 2:deleteNamePlan();
+      case 2:
+        deleteNamePlan();
         break;
-      default:std::cout << "Wrong Input" << std::endl;
+      default:
+        std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -303,7 +322,7 @@ class PlanDB {
   void deleteDatePlan() {
     std::string planDate;
     std::set<std::string> Date = getDates();
-    std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
+    std::cout << "Input Target Plan Date (YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
     if (Date.find(planDate) == Date.end()) {
       std::cout << "Wrong Input" << std::endl;
@@ -317,14 +336,17 @@ class PlanDB {
     std::cout << "Select a Mode (1. Update Date Plan, 2. Update Name Plan): ";
     int selectNum;
     std::cin >> selectNum;
-    std::cin.ignore();  // 개행 문자 제거.
+    std::cin.ignore();  // 개행 문자 제거
     system("cls");
     switch (selectNum) {
-      case 1:updateDatePlan();
+      case 1:
+        updateDatePlan();
         break;
-      case 2:updateNamePlan();
+      case 2:
+        updateNamePlan();
         break;
-      default:std::cout << "Wrong Input" << std::endl;
+      default:
+        std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -334,7 +356,7 @@ class PlanDB {
     std::string item;
     std::string content;
     std::set<std::string> Date = getDates();
-    std::cout << "Input Target Plan Date(YYYY-MM-DD): ";
+    std::cout << "Input Target Plan Date (YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
     if (Date.find(planDate) == Date.end()) {
       std::cout << "Wrong Input" << std::endl;
@@ -343,20 +365,21 @@ class PlanDB {
     std::cout << "Which item do you want to update? (date, breakfast, "
                  "lunch, dinner): ";
     std::getline(std::cin, item);
-    if (item != "date" && item != "breakfast" && item != "lunch" && item != "dinner") {
+    if (item != "date" && item != "breakfast" && item != "lunch" &&
+        item != "dinner") {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
     std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
-    if(item == "date") {
+    if (item == "date") {
       if (Date.find(content) != Date.end()) {
         std::cout << "Wrong Input" << std::endl;
         return;
       }
     }
     dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
-        "' WHERE date = '" + planDate + "';")
+                      "' WHERE date = '" + planDate + "';")
                          .c_str());
   }
 
@@ -374,20 +397,21 @@ class PlanDB {
     std::cout << "Which item do you want to update? (name, breakfast, "
                  "lunch, dinner): ";
     std::getline(std::cin, item);
-    if (item != "name" && item != "breakfast" && item != "lunch" && item != "dinner") {
+    if (item != "name" && item != "breakfast" && item != "lunch" &&
+        item != "dinner") {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
     std::cout << "What would you like to change the " + item + " to?: ";
     std::getline(std::cin, content);
-    if(item == "name") {
+    if (item == "name") {
       if (Name.find(content) != Name.end()) {
         std::cout << "Wrong Input" << std::endl;
         return;
       }
     }
     dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
-        "' WHERE name = '" + planName + "';")
+                      "' WHERE name = '" + planName + "';")
                          .c_str());
   }
 };

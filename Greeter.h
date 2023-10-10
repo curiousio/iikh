@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "DatabaseManager.h"
-#include "RecipeDB.h"
 #include "PlanDB.h"
+#include "RecipeDB.h"
 #include "sqlite/sqlite3.h"
 
 class Greeter {
@@ -35,30 +35,40 @@ class Greeter {
     }
     std::cout << "Select Menu: ";
     std::cin >> selectNum;
-    std::cin.ignore(); //개행문자 제거.
+    std::cin.ignore();  // 개행 문자 제거
     system("cls");
     std::cout << "Selected Menu: " << menu[selectNum - 1] << std::endl;
 
     switch (selectNum) {
-      case 1:recipeDB.searchRecipe();
+      case 1:
+        recipeDB.searchRecipe();
         break;
-      case 2:recipeDB.addRecipe();
+      case 2:
+        recipeDB.addRecipe();
         break;
-      case 3:recipeDB.deleteRecipe();
+      case 3:
+        recipeDB.deleteRecipe();
         break;
-      case 4:recipeDB.updateRecipe();
+      case 4:
+        recipeDB.updateRecipe();
         break;
-      case 5:planDB.searchPlan();
+      case 5:
+        planDB.searchPlan();
         break;
-      case 6:planDB.addPlan();
+      case 6:
+        planDB.addPlan();
         break;
-      case 7:planDB.deletePlan();
+      case 7:
+        planDB.deletePlan();
         break;
-      case 8:planDB.updatePlan();
+      case 8:
+        planDB.updatePlan();
         break;
-      case 9:quit();
+      case 9:
+        quit();
         break;
-      default:std::cout << "Wrong Input" << std::endl;
+      default:
+        std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
