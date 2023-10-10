@@ -31,6 +31,11 @@ class Plan {
   std::string getDinner() { return Dinner; }
 
   int printPlan() {
+    //비어있는경우가 없는거.
+    if(planName.empty()) {
+        std::cout << "No Plan" << std::endl;
+        return 0;
+    }
     std::cout << "----------------------------------------" << std::endl;
     if (planName != "NULL") { std::cout << "Plan Name: " << planName << std::endl; }
     if (date != "NULL") { std::cout << "Date: " << date << std::endl; }
