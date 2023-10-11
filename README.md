@@ -45,10 +45,11 @@ g++ main.cpp -l sqlite3
 *****
 
 * ### Windows/MSVC
-
-1. Make New C++ Empty Project
-2. Copy the `sqlite` directory into `Header Files` and the source code into `Source Files`
-3. Bulid
+* #### you want to Execute Program only
+  Go to [Releases](https://github.com/curiousio/iikh/releases) and Download IIKH.exe.
+* #### If you want to Build yourself
+1. Open IIKH.sln to VS 2022
+2. Bulid
 
 ## License
 
