@@ -29,6 +29,22 @@ Checkout to the desired version.
 git checkout v1.0.0
 ```
 
+### GNU/Linux
+
+Install the SQLite3 library via the system package manager.
+
+#### Debian-based
+
+```shell
+sudo apt install libsqlite3-dev
+```
+
+#### RPM-based
+
+```shell
+sudo dnf install sqlite-devel
+```
+
 ## Execution
 
 ### Linux/G++
