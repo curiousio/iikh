@@ -8,6 +8,7 @@
 
 #include "DatabaseManager.h"
 #include "Plan.h"
+#include "RecipeDB.h"
 #include "sqlite/sqlite3.h"
 
 class PlanDB {

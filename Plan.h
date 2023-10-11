@@ -5,8 +5,6 @@
 #include <utility>
 #include <vector>
 
-#include "DatabaseManager.h"
-#include "sqlite/sqlite3.h"
 
 class Plan {
  private:
