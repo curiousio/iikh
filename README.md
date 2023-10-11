@@ -31,7 +31,7 @@ git checkout v1.0.0
 
 ## Execution
 
-* ### Linux/GCC
+### Linux/G++
 
 Build from the source and run the application.
 
@@ -39,17 +39,22 @@ Build from the source and run the application.
 g++ main.cpp -l sqlite3
 ./a.out
 ```
-* Warning : Becuase Linux's System Call is different from Windows, You can see the Error or Warning when you execute the program.
-* Please Modify system() before executing program. 
 
-*****
+* Warning: Because Linux's system call is different from Windows, you can see the error or warning when executing the program.
+* Please modify `system()` before executing program.
 
-* ### Windows/MSVC
-* #### you want to Execute Program only
-  Go to [Releases](https://github.com/curiousio/iikh/releases) and Download IIKH.exe.
-* #### If you want to Build yourself
-1. Open IIKH.sln to VS 2022
-2. Bulid
+### Windows/MSVC
+
+You have two options.
+
+#### Execute the program only
+
+Go to [Releases](https://github.com/curiousio/iikh/releases) and download `IIKH.exe`.
+
+#### Build yourself
+
+1. Open `IIKH.sln` with Visual Studio 2022
+2. Build
 
 ## License
 

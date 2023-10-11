@@ -1,8 +1,9 @@
 #pragma once
 
-#include  <iostream>
+#include <iostream>
 #include <string>
 #include <vector>
+
 #include "DatabaseManager.h"
 #include "Recipe.h"
 #include "sqlite/sqlite3.h"
@@ -28,11 +29,14 @@ class RecipeDB {
     std::cin.ignore();
     system("cls");
     switch (selectNum) {
-      case 1:printAllRecipe();
+      case 1:
+        printAllRecipe();
         break;
-      case 2:selectRecipe();
+      case 2:
+        selectRecipe();
         break;
-      default:std::cout << "Wrong Input" << std::endl;
+      default:
+        std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -41,14 +45,14 @@ class RecipeDB {
     std::cout << "All Recipe" << std::endl;
     std::vector<Recipe> recipes;
     dbm.executeQuery("SELECT * FROM recipe;", &recipes, true);
-    if(recipes.empty()) {
-        std::cout << "No Recipe" << std::endl;
-        return;
+    if (recipes.empty()) {
+      std::cout << "No Recipe" << std::endl;
+      return;
     }
     for (auto &recipe : recipes) {
       recipe.printNameAndDescription();
     }
-    std::cout << "Do you want to see a specific recipe? (y/n): ";
+    std::cout << "Do you want to see a specific recipe? [y/n]: ";
     char select;
     std::cin >> select;
     std::cin.ignore();
@@ -83,8 +87,8 @@ class RecipeDB {
     dbm.executeQuery(
         ("INSERT INTO recipe (name, description, ingredient, recipe) VALUES "
          "('" +
-            recipe.getMenuName() + "', '" + recipe.getMenuDescription() + "', '" +
-            recipe.getMenuIngredient() + "', '" + recipe.getMenuRecipe() + "');")
+         recipe.getMenuName() + "', '" + recipe.getMenuDescription() + "', '" +
+         recipe.getMenuIngredient() + "', '" + recipe.getMenuRecipe() + "');")
             .c_str());
   }
 
@@ -93,9 +97,9 @@ class RecipeDB {
     std::set<std::string> recipeNames = getRecipeNames();
     std::cout << "Input Target Recipe Name: ";
     std::getline(std::cin, menu_recipe);
-    if(recipeNames.find(menu_recipe) == recipeNames.end()) {
-        std::cout << "Wrong Input" << std::endl;
-        return;
+    if (recipeNames.find(menu_recipe) == recipeNames.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
     }
     dbm.executeQuery(
         ("DELETE FROM recipe WHERE name='" + menu_recipe + "';").c_str());
@@ -106,16 +110,17 @@ class RecipeDB {
     std::set<std::string> recipeNames = getRecipeNames();
     std::cout << "Input Target Recipe Name: ";
     std::getline(std::cin, menu_recipe);
-    if(recipeNames.find(menu_recipe) == recipeNames.end()) {
-        std::cout << "Wrong Input" << std::endl;
-        return;
+    if (recipeNames.find(menu_recipe) == recipeNames.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
     }
     std::cout << "What would you like to change? (name, description, "
                  "ingredient, recipe): ";
     std::getline(std::cin, item);
-    if(item != "name" && item != "description" && item != "ingredient" && item != "recipe") {
-        std::cout << "Wrong Input" << std::endl;
-        return;
+    if (item != "name" && item != "description" && item != "ingredient" &&
+        item != "recipe") {
+      std::cout << "Wrong Input" << std::endl;
+      return;
     }
     if (item == "recipe") {
       std::cout << "Input Recipe Method (To finish, just press Enter)"
@@ -136,10 +141,9 @@ class RecipeDB {
       std::cout << "What would you like to change the " + item + " to?: ";
       std::getline(std::cin, content);
     }
-    dbm.executeQuery(
-        ("UPDATE recipe SET " + item + " = '" + content + "' WHERE name = '" +
-            menu_recipe + "';")
-            .c_str());
+    dbm.executeQuery(("UPDATE recipe SET " + item + " = '" + content +
+                      "' WHERE name = '" + menu_recipe + "';")
+                         .c_str());
   }
 
   std::set<std::string> getRecipeNames() {
