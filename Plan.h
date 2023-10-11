@@ -5,7 +5,6 @@
 #include <utility>
 #include <vector>
 
-
 class Plan {
  private:
   std::string planName;
