@@ -17,7 +17,7 @@ class PlanDB {
   DatabaseManager dbm;
   RecipeDB recipe_db_;
   std::set<std::string> RecipeName;
-  std::vector<std::pair<std::string,std::set<std::string>>> ingredients;
+  std::vector<std::pair<std::string, std::set<std::string>>> ingredients;
 
  public:
   PlanDB() : dbm("iikh.db") {
@@ -53,17 +53,13 @@ class PlanDB {
     std::cin.ignore();  // 개행 문자 제거
     system("cls");
     switch (selectNum) {
-      case 1:
-        printAllPlanByDate();
+      case 1:printAllPlanByDate();
         break;
-      case 2:
-        printAllPlanByName();
+      case 2:printAllPlanByName();
         break;
-      case 3:
-        selectPlanByDate();
+      case 3:selectPlanByDate();
         break;
-      case 4:
-        selectPlanByName();
+      case 4:selectPlanByName();
         break;
       case 5:selectPeriodList();
         break;
@@ -210,17 +206,13 @@ class PlanDB {
     std::cin.ignore();  // 개행 문자 제거
     system("cls");
     switch (selectNum) {
-      case 1:
-        addDatePlan();
+      case 1:addDatePlan();
         break;
-      case 2:
-        addNamePlan();
+      case 2:addNamePlan();
         break;
-      case 3:
-        addDatePlanUsingNamePlan();
+      case 3:addDatePlanUsingNamePlan();
         break;
-      default:
-        std::cout << "Wrong Input" << std::endl;
+      default:std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -291,8 +283,8 @@ class PlanDB {
     }
     // insert문, plan_id, date는 NULL로 세팅
     dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, '" + planName +
-                      "', NULL, '" + planBreakfast + "', '" + planLunch +
-                      "', '" + planDinner + "');")
+        "', NULL, '" + planBreakfast + "', '" + planLunch +
+        "', '" + planDinner + "');")
                          .c_str());
   }
 
@@ -301,9 +293,20 @@ class PlanDB {
     std::string planBreakfast;
     std::string planLunch;
     std::string planDinner;
+    std::set<std::string> Date = getDates();
     RecipeName = recipe_db_.getRecipeNames();
     std::cout << "Input Date (YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
+    //현재날짜 string으로
+    std::string today = getToday();
+    if (compareDate(planDate, today)) {
+      std::cout << "Enter Date After " + today << std::endl;
+      return;
+    }
+    if (Date.find(planDate) != Date.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
     std::cout << "Input breakfast: ";
     std::getline(std::cin, planBreakfast);
     if (std::find(RecipeName.begin(), RecipeName.end(), planBreakfast) ==
@@ -327,8 +330,8 @@ class PlanDB {
     }
     // insert문, plan_id, name은 NULL로 세팅
     dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, NULL, '" + planDate +
-                      "', '" + planBreakfast + "', '" + planLunch + "', '" +
-                      planDinner + "');")
+        "', '" + planBreakfast + "', '" + planLunch + "', '" +
+        planDinner + "');")
                          .c_str());
     makeDatePlanGroceryList(planDate);
   }
@@ -340,14 +343,11 @@ class PlanDB {
     std::cin.ignore();  // 개행 문자 제거
     system("cls");
     switch (selectNum) {
-      case 1:
-        deleteDatePlan();
+      case 1:deleteDatePlan();
         break;
-      case 2:
-        deleteNamePlan();
+      case 2:deleteNamePlan();
         break;
-      default:
-        std::cout << "Wrong Input" << std::endl;
+      default:std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -386,14 +386,11 @@ class PlanDB {
     std::cin.ignore();  // 개행 문자 제거
     system("cls");
     switch (selectNum) {
-      case 1:
-        updateDatePlan();
+      case 1:updateDatePlan();
         break;
-      case 2:
-        updateNamePlan();
+      case 2:updateNamePlan();
         break;
-      default:
-        std::cout << "Wrong Input" << std::endl;
+      default:std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -426,7 +423,7 @@ class PlanDB {
       }
     }
     dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
-                      "' WHERE date = '" + planDate + "';")
+        "' WHERE date = '" + planDate + "';")
                          .c_str());
     deleteDatePlanGroceryList(planDate);
     if (item == "date") {
@@ -464,7 +461,7 @@ class PlanDB {
       }
     }
     dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
-                      "' WHERE name = '" + planName + "';")
+        "' WHERE name = '" + planName + "';")
                          .c_str());
   }
 
@@ -476,6 +473,11 @@ class PlanDB {
     std::getline(std::cin, start_date);
     std::cout << "Input End Date (YYYY-MM-DD): ";
     std::getline(std::cin, end_date);
+    if (!compareDate(start_date, end_date)) {
+      std::cout << "The order of the start and end dates is not correct. The order has been changed automatically."
+                << std::endl;
+      swap(start_date, end_date);
+    }
     std::vector<Plan> plans;
     dbm.executeQuery(("SELECT * FROM plan WHERE date BETWEEN '" + start_date +
         "' AND '" + end_date + "' ORDER BY date ASC;").c_str(), &plans, true);
@@ -523,22 +525,27 @@ class PlanDB {
     std::getline(std::cin, start_date);
     std::cout << "Input End Date (YYYY-MM-DD): ";
     std::getline(std::cin, end_date);
+    if (!compareDate(start_date, end_date)) {
+      std::cout << "The order of the start and end dates is not correct. The order has been changed automatically."
+                << std::endl;
+      swap(start_date, end_date);
+    }
     dbm.executeQuery(("SELECT date FROM plan WHERE date BETWEEN '" + start_date +
         "' AND '" + end_date + "' ORDER BY date ASC;").c_str(), &tempDate, true);
-    if(tempDate.empty()){
+    if (tempDate.empty()) {
       std::cout << "No Plan Between " + start_date + "and " + end_date << std::endl;
       return;
     }
-    for(auto &i: tempDate){
-        std::set<std::string> tempIngredients;
-        for(auto const &j : ingredients){
-          if(j.first == i){
-            tempIngredients = j.second;
-          }
+    for (auto &i : tempDate) {
+      std::set<std::string> tempIngredients;
+      for (auto const &j : ingredients) {
+        if (j.first == i) {
+          tempIngredients = j.second;
         }
-        for(auto &j: tempIngredients){
-            temp.insert(j);
-        }
+      }
+      for (auto &j : tempIngredients) {
+        temp.insert(j);
+      }
     }
     std::cout << "--------------Grocery List--------------" << std::endl;
     for (const auto &i : temp) {
@@ -557,8 +564,8 @@ class PlanDB {
       return;
     }
     std::set<std::string> temp;
-    for(auto const &i : ingredients){
-      if(i.first == planDate){
+    for (auto const &i : ingredients) {
+      if (i.first == planDate) {
         temp = i.second;
       }
     }
@@ -616,11 +623,52 @@ class PlanDB {
   }
 
   void deleteDatePlanGroceryList(std::string const &planDate) {
-    for(int i = 0; i < ingredients.size(); i++){
-      if(ingredients[i].first == planDate){
+    for (int i = 0; i < ingredients.size(); i++) {
+      if (ingredients[i].first == planDate) {
         ingredients.erase(ingredients.begin() + i);
       }
     }
+  }
+
+  bool compareDate(std::string const &date1, std::string const &date2) {
+    int date1Year = std::stoi(date1.substr(0, 4));
+    int date1Month = std::stoi(date1.substr(5, 2));
+    int date1Day = std::stoi(date1.substr(8, 2));
+    int date2Year = std::stoi(date2.substr(0, 4));
+    int date2Month = std::stoi(date2.substr(5, 2));
+    int date2Day = std::stoi(date2.substr(8, 2));
+    if (date1Year > date2Year) {
+      return true;
+    } else if (date1Year == date2Year) {
+      if (date1Month > date2Month) {
+        return true;
+      } else if (date1Month == date2Month) {
+        if (date1Day > date2Day) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  static std::string getToday() {
+    time_t now = time(nullptr);
+    tm *ltm = localtime(&now);
+    std::string year = std::to_string(1900 + ltm->tm_year);
+    std::string month = std::to_string(1 + ltm->tm_mon);
+    std::string day = std::to_string(ltm->tm_mday);
+    if (month.length() == 1) {
+      month = "0" + month;
+    }
+    if (day.length() == 1) {
+      day = "0" + day;
+    }
+    return year + "-" + month + "-" + day;
   }
 
 };
