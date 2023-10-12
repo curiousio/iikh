@@ -4,10 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "DatabaseManager.h"
 #include "PlanDB.h"
 #include "RecipeDB.h"
-#include "sqlite/sqlite3.h"
 
 class Greeter {
  private:

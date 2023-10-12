@@ -7,7 +7,6 @@
 
 #include "DatabaseManager.h"
 #include "Recipe.h"
-#include "sqlite/sqlite3.h"
 
 class RecipeDB {
  private:

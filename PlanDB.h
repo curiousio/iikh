@@ -1,7 +1,7 @@
 #pragma once
 
-#include <algorithm>
 #include <iostream>
+#include <algorithm>
 #include <set>
 #include <utility>
 #include <vector>
@@ -9,8 +9,8 @@
 
 #include "DatabaseManager.h"
 #include "Plan.h"
+#include "Date.h"
 #include "RecipeDB.h"
-#include "sqlite/sqlite3.h"
 
 class PlanDB {
  private:
@@ -18,6 +18,7 @@ class PlanDB {
   RecipeDB recipe_db_;
   std::set<std::string> RecipeName;
   std::vector<std::pair<std::string, std::set<std::string>>> ingredients;
+  Date _date;
 
  public:
   PlanDB() : dbm("iikh.db") {
@@ -236,8 +237,8 @@ class PlanDB {
     }
     std::cout << "Input Date (YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
-    std::string today = getToday();
-    if (compareDate(planDate, today)) {
+    std::string today = Date::getToday();
+    if (_date.compareDate(today, planDate)) {
       std::cout << "Enter Date After " + today << std::endl;
       return;
     }
@@ -303,8 +304,8 @@ class PlanDB {
     std::cout << "Input Date (YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
     //현재날짜 string으로
-    std::string today = getToday();
-    if (compareDate(planDate, today)) {
+    std::string today = Date::getToday();
+    if (_date.compareDate(today, planDate)) {
       std::cout << "Enter Date After " + today << std::endl;
       return;
     }
@@ -478,7 +479,7 @@ class PlanDB {
     std::getline(std::cin, start_date);
     std::cout << "Input End Date (YYYY-MM-DD): ";
     std::getline(std::cin, end_date);
-    if (compareDate(start_date, end_date)) {
+    if (_date.compareDate(start_date, end_date)) {
       std::cout << "The order of the start and end dates is not correct. The order has been changed automatically."
                 << std::endl;
       swap(start_date, end_date);
@@ -530,7 +531,7 @@ class PlanDB {
     std::getline(std::cin, start_date);
     std::cout << "Input End Date (YYYY-MM-DD): ";
     std::getline(std::cin, end_date);
-    if (compareDate(start_date, end_date)) {
+    if (_date.compareDate(start_date, end_date)) {
       std::cout << "The order of the start and end dates is not correct. The order has been changed automatically."
                 << std::endl;
       swap(start_date, end_date);
@@ -635,45 +636,5 @@ class PlanDB {
     }
   }
 
-  bool compareDate(std::string const &date1, std::string const &date2) {
-    int date1Year = std::stoi(date1.substr(0, 4));
-    int date1Month = std::stoi(date1.substr(5, 2));
-    int date1Day = std::stoi(date1.substr(8, 2));
-    int date2Year = std::stoi(date2.substr(0, 4));
-    int date2Month = std::stoi(date2.substr(5, 2));
-    int date2Day = std::stoi(date2.substr(8, 2));
-    if (date1Year > date2Year) {
-      return true;
-    } else if (date1Year == date2Year) {
-      if (date1Month > date2Month) {
-        return true;
-      } else if (date1Month == date2Month) {
-        if (date1Day > date2Day) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  static std::string getToday() {
-    time_t now = time(nullptr);
-    tm *ltm = localtime(&now);
-    std::string year = std::to_string(1900 + ltm->tm_year);
-    std::string month = std::to_string(1 + ltm->tm_mon);
-    std::string day = std::to_string(ltm->tm_mday);
-    if (month.length() == 1) {
-      month = "0" + month;
-    }
-    if (day.length() == 1) {
-      day = "0" + day;
-    }
-    return year + "-" + month + "-" + day;
-  }
 
 };
