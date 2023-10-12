@@ -17,7 +17,7 @@ class PlanDB {
   DatabaseManager dbm;
   RecipeDB recipe_db_;
   std::set<std::string> RecipeName;
-  std::map<std::string, std::set<std::string>> ingredients;
+  std::vector<std::pair<std::string,std::set<std::string>>> ingredients;
 
  public:
   PlanDB() : dbm("iikh.db") {
@@ -26,6 +26,9 @@ class PlanDB {
         "CREATE TABLE IF NOT EXISTS plan (plan_id INTEGER PRIMARY KEY "
         "AUTOINCREMENT, name TEXT, date DATE, breakfast TEXT, lunch TEXT, "
         "dinner text);");
+
+    //map에 넣어놔야함.
+    makeDatePlanGroceryList();
   }
 
   std::set<std::string> getNames() {
@@ -37,7 +40,7 @@ class PlanDB {
 
   std::set<std::string> getDates() {
     std::set<std::string> temp;
-    dbm.executeQuery("SELECT date FROM plan WHERE date IS NOT NULL;", &temp,
+    dbm.executeQuery("SELECT date FROM plan WHERE date IS NOT NULL ORDER BY date ASC;", &temp,
                      true);
     return temp;
   }
@@ -72,7 +75,7 @@ class PlanDB {
   void printAllPlanByDate() {
     std::cout << "All Plan" << std::endl;
     std::vector<Plan> plans;
-    dbm.executeQuery("SELECT * FROM plan WHERE date IS NOT NULL;", &plans,
+    dbm.executeQuery("SELECT * FROM plan WHERE date IS NOT NULL ORDER BY date ASC;", &plans,
                      true);
     if (plans.empty()) {
       std::cout << "No Date Plan" << std::endl;
@@ -475,7 +478,7 @@ class PlanDB {
     std::getline(std::cin, end_date);
     std::vector<Plan> plans;
     dbm.executeQuery(("SELECT * FROM plan WHERE date BETWEEN '" + start_date +
-        "' AND '" + end_date + "';").c_str(), &plans, true);
+        "' AND '" + end_date + "' ORDER BY date ASC;").c_str(), &plans, true);
     if (plans.empty()) {
       std::cout << "No Plan Between " + start_date + "and " + end_date << std::endl;
       return;
@@ -515,21 +518,30 @@ class PlanDB {
     std::string start_date;
     std::string end_date;
     std::set<std::string> temp;
-    std::vector<std::string> tempDate;
+    std::set<std::string> tempDate;
     std::cout << "Input Start Date (YYYY-MM-DD): ";
     std::getline(std::cin, start_date);
     std::cout << "Input End Date (YYYY-MM-DD): ";
     std::getline(std::cin, end_date);
     dbm.executeQuery(("SELECT date FROM plan WHERE date BETWEEN '" + start_date +
-        "' AND '" + end_date + "';").c_str(), &tempDate, true);
-    for (auto &i : tempDate) {
-        std::set<std::string> tempIngredients = ingredients[i];
-        for (auto &ingredient : tempIngredients) {
-            temp.insert(ingredient);
+        "' AND '" + end_date + "' ORDER BY date ASC;").c_str(), &tempDate, true);
+    if(tempDate.empty()){
+      std::cout << "No Plan Between " + start_date + "and " + end_date << std::endl;
+      return;
+    }
+    for(auto &i: tempDate){
+        std::set<std::string> tempIngredients;
+        for(auto const &j : ingredients){
+          if(j.first == i){
+            tempIngredients = j.second;
+          }
+        }
+        for(auto &j: tempIngredients){
+            temp.insert(j);
         }
     }
     std::cout << "--------------Grocery List--------------" << std::endl;
-    for (auto &i : temp) {
+    for (const auto &i : temp) {
       std::cout << i << std::endl;
     }
     std::cout << "----------------------------------------" << std::endl;
@@ -544,11 +556,42 @@ class PlanDB {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
+    std::set<std::string> temp;
+    for(auto const &i : ingredients){
+      if(i.first == planDate){
+        temp = i.second;
+      }
+    }
     std::cout << "--------------Grocery List--------------" << std::endl;
-    for (auto &i : ingredients[planDate]) {
+    for (const auto &i : temp) {
       std::cout << i << std::endl;
     }
     std::cout << "----------------------------------------" << std::endl;
+  }
+
+  void makeDatePlanGroceryList() {
+    std::vector<Plan> plans;
+    dbm.executeQuery("SELECT * FROM plan WHERE date IS NOT NULL;", &plans,
+                     true);
+    for (auto &plan : plans) {
+      std::string planDate = plan.getDate();
+      std::string breakfast = plan.getBreakfast();
+      std::string lunch = plan.getLunch();
+      std::string dinner = plan.getDinner();
+      std::vector<Recipe> recipes;
+      recipes.push_back(recipe_db_.selectRecipe(breakfast, true));
+      recipes.push_back(recipe_db_.selectRecipe(lunch, true));
+      recipes.push_back(recipe_db_.selectRecipe(dinner, true));
+
+      std::set<std::string> tempIngredients;
+      for (auto &recipe : recipes) {
+        std::set<std::string> temp = recipe.getIngredients();
+        for (auto &ingredient : temp) {
+          tempIngredients.insert(ingredient);
+        }
+      }
+      ingredients.push_back({planDate, tempIngredients});
+    }
   }
 
   void makeDatePlanGroceryList(std::string const &planDate) {
@@ -562,7 +605,6 @@ class PlanDB {
     recipes.push_back(recipe_db_.selectRecipe(breakfast, true));
     recipes.push_back(recipe_db_.selectRecipe(lunch, true));
     recipes.push_back(recipe_db_.selectRecipe(dinner, true));
-
     std::set<std::string> tempIngredients;
     for (auto &recipe : recipes) {
       std::set<std::string> temp = recipe.getIngredients();
@@ -570,11 +612,15 @@ class PlanDB {
         tempIngredients.insert(ingredient);
       }
     }
-    ingredients[planDate] = tempIngredients;
+    ingredients.push_back({planDate, tempIngredients});
   }
 
   void deleteDatePlanGroceryList(std::string const &planDate) {
-    ingredients.erase(planDate);
+    for(int i = 0; i < ingredients.size(); i++){
+      if(ingredients[i].first == planDate){
+        ingredients.erase(ingredients.begin() + i);
+      }
+    }
   }
 
 };
