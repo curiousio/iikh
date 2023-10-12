@@ -62,7 +62,7 @@ class PlanDB {
       case 4:
         selectPlanByName();
         break;
-      case 5:SelectPeriodList();
+      case 5:selectPeriodList();
         break;
       default:std::cout << "Wrong Input" << std::endl;
         break;
@@ -466,7 +466,7 @@ class PlanDB {
   }
 
   //시작 기간, 끝나는 기간 입력받고 그 기간사이의 Plan 어느날에 있는지 출력.
-  void SelectPeriodList() {
+  void selectPeriodList() {
     std::string start_date;
     std::string end_date;
     std::cout << "Input Start Date (YYYY-MM-DD): ";
@@ -514,17 +514,19 @@ class PlanDB {
   void showPeriodGroceryList() {
     std::string start_date;
     std::string end_date;
+    std::set<std::string> temp;
+    std::vector<std::string> tempDate;
     std::cout << "Input Start Date (YYYY-MM-DD): ";
     std::getline(std::cin, start_date);
     std::cout << "Input End Date (YYYY-MM-DD): ";
     std::getline(std::cin, end_date);
-    std::set<std::string> temp;
-    for (auto &i : ingredients) {
-      if (i.first >= start_date && i.first <= end_date) {
-        for (auto &j : i.second) {
-          temp.insert(j);
+    dbm.executeQuery(("SELECT date FROM plan WHERE date BETWEEN '" + start_date +
+        "' AND '" + end_date + "';").c_str(), &tempDate, true);
+    for (auto &i : tempDate) {
+        std::set<std::string> tempIngredients = ingredients[i];
+        for (auto &ingredient : tempIngredients) {
+            temp.insert(ingredient);
         }
-      }
     }
     std::cout << "--------------Grocery List--------------" << std::endl;
     for (auto &i : temp) {
