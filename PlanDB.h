@@ -473,7 +473,7 @@ class PlanDB {
     std::getline(std::cin, start_date);
     std::cout << "Input End Date (YYYY-MM-DD): ";
     std::getline(std::cin, end_date);
-    if (!compareDate(start_date, end_date)) {
+    if (compareDate(start_date, end_date)) {
       std::cout << "The order of the start and end dates is not correct. The order has been changed automatically."
                 << std::endl;
       swap(start_date, end_date);
@@ -525,7 +525,7 @@ class PlanDB {
     std::getline(std::cin, start_date);
     std::cout << "Input End Date (YYYY-MM-DD): ";
     std::getline(std::cin, end_date);
-    if (!compareDate(start_date, end_date)) {
+    if (compareDate(start_date, end_date)) {
       std::cout << "The order of the start and end dates is not correct. The order has been changed automatically."
                 << std::endl;
       swap(start_date, end_date);
