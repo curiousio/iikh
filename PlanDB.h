@@ -5,6 +5,7 @@
 #include <set>
 #include <utility>
 #include <vector>
+#include <map>
 
 #include "DatabaseManager.h"
 #include "Plan.h"
@@ -16,13 +17,14 @@ class PlanDB {
   DatabaseManager dbm;
   RecipeDB recipe_db_;
   std::set<std::string> RecipeName;
+  std::map<std::string, std::set<std::string>> ingredients;
 
  public:
   PlanDB() : dbm("iikh.db") {
     // createTable
     dbm.executeQuery(
         "CREATE TABLE IF NOT EXISTS plan (plan_id INTEGER PRIMARY KEY "
-        "AUTOINCREMENT, name TEXT, date TEXT, breakfast TEXT, lunch TEXT, "
+        "AUTOINCREMENT, name TEXT, date DATE, breakfast TEXT, lunch TEXT, "
         "dinner text);");
   }
 
@@ -42,7 +44,7 @@ class PlanDB {
 
   void searchPlan() {
     std::cout << "Select a Mode (1. Print All Date Plan, 2. Print All Name "
-                 "Plan 3. Select Date, 4. Select Name): ";
+                 "Plan 3. Select Date, 4. Select Name 5. Select Period): ";
     int selectNum;
     std::cin >> selectNum;
     std::cin.ignore();  // 개행 문자 제거
@@ -60,8 +62,9 @@ class PlanDB {
       case 4:
         selectPlanByName();
         break;
-      default:
-        std::cout << "Wrong Input" << std::endl;
+      case 5:SelectPeriodList();
+        break;
+      default:std::cout << "Wrong Input" << std::endl;
         break;
     }
   }
@@ -245,12 +248,12 @@ class PlanDB {
     dbm.executeQuery(
         ("SELECT * FROM plan WHERE name = '" + planName + "';").c_str(),
         &inputPlan);
-    // 날짜랑 inputPlan의 아침, 점심, 저녁만 들어가게.
-    dbm.executeQuery(("INSERT INTO Plan VALUES(NULL, NULL, '" + planDate +
-                      "', '" + inputPlan.getBreakfast() + "', '" +
-                      inputPlan.getLunch() + "', '" + inputPlan.getDinner() +
-                      "');")
+    //날짜랑 inputPlan의 아침, 점심, 저녁만 들어가게.
+    dbm.executeQuery(("INSERT INTO plan VALUES(NULL, NULL, '" + planDate +
+        "', '" + inputPlan.getBreakfast() + "', '" + inputPlan.getLunch() +
+        "', '" + inputPlan.getDinner() + "');")
                          .c_str());
+    makeDatePlanGroceryList(planDate);
   }
 
   void addNamePlan() {
@@ -324,6 +327,7 @@ class PlanDB {
                       "', '" + planBreakfast + "', '" + planLunch + "', '" +
                       planDinner + "');")
                          .c_str());
+    makeDatePlanGroceryList(planDate);
   }
 
   void deletePlan() {
@@ -369,6 +373,7 @@ class PlanDB {
     }
     dbm.executeQuery(
         ("DELETE FROM plan WHERE date='" + planDate + "';").c_str());
+    deleteDatePlanGroceryList(planDate);
   }
 
   void updatePlan() {
@@ -420,6 +425,12 @@ class PlanDB {
     dbm.executeQuery(("UPDATE plan SET " + item + " = '" + content +
                       "' WHERE date = '" + planDate + "';")
                          .c_str());
+    deleteDatePlanGroceryList(planDate);
+    if (item == "date") {
+      makeDatePlanGroceryList(content);
+    } else {
+      makeDatePlanGroceryList(planDate);
+    }
   }
 
   void updateNamePlan() {
@@ -453,4 +464,115 @@ class PlanDB {
                       "' WHERE name = '" + planName + "';")
                          .c_str());
   }
+
+  //시작 기간, 끝나는 기간 입력받고 그 기간사이의 Plan 어느날에 있는지 출력.
+  void SelectPeriodList() {
+    std::string start_date;
+    std::string end_date;
+    std::cout << "Input Start Date (YYYY-MM-DD): ";
+    std::getline(std::cin, start_date);
+    std::cout << "Input End Date (YYYY-MM-DD): ";
+    std::getline(std::cin, end_date);
+    std::vector<Plan> plans;
+    dbm.executeQuery(("SELECT * FROM plan WHERE date BETWEEN '" + start_date +
+        "' AND '" + end_date + "';").c_str(), &plans, true);
+    if (plans.empty()) {
+      std::cout << "No Plan Between " + start_date + "and " + end_date << std::endl;
+      return;
+    }
+    for (auto &plan : plans) {
+      plan.printPlanDate();
+    }
+    std::cout << "Do you want to see a specific plan? [y/n]: ";
+    char select;
+    std::cin >> select;
+    std::cin.ignore();
+    if (select == 'y') {
+      std::cout << "Input Plan Date: ";
+      std::string plan;
+      std::getline(std::cin, plan);
+      selectPlanByDate(plan);
+    }
+  }
+
+  void showGroceryList() {
+    std::cout << "Select a Mode (1. Show Period Grocery List, 2. Show Specific Date Grocery List): ";
+    int selectNum;
+    std::cin >> selectNum;
+    std::cin.ignore();  // 개행 문자 제거
+    system("cls");
+    switch (selectNum) {
+      case 1:showPeriodGroceryList();
+        break;
+      case 2:showSpecificDateGroceryList();
+        break;
+      default:std::cout << "Wrong Input" << std::endl;
+        break;
+    }
+  }
+
+  void showPeriodGroceryList() {
+    std::string start_date;
+    std::string end_date;
+    std::cout << "Input Start Date (YYYY-MM-DD): ";
+    std::getline(std::cin, start_date);
+    std::cout << "Input End Date (YYYY-MM-DD): ";
+    std::getline(std::cin, end_date);
+    std::set<std::string> temp;
+    for (auto &i : ingredients) {
+      if (i.first >= start_date && i.first <= end_date) {
+        for (auto &j : i.second) {
+          temp.insert(j);
+        }
+      }
+    }
+    std::cout << "--------------Grocery List--------------" << std::endl;
+    for (auto &i : temp) {
+      std::cout << i << std::endl;
+    }
+    std::cout << "----------------------------------------" << std::endl;
+  }
+
+  void showSpecificDateGroceryList() {
+    std::string planDate;
+    std::set<std::string> Date = getDates();
+    std::cout << "Input Target Plan Date (YYYY-MM-DD): ";
+    std::getline(std::cin, planDate);
+    if (Date.find(planDate) == Date.end()) {
+      std::cout << "Wrong Input" << std::endl;
+      return;
+    }
+    std::cout << "--------------Grocery List--------------" << std::endl;
+    for (auto &i : ingredients[planDate]) {
+      std::cout << i << std::endl;
+    }
+    std::cout << "----------------------------------------" << std::endl;
+  }
+
+  void makeDatePlanGroceryList(std::string const &planDate) {
+    Plan plan;
+    dbm.executeQuery(
+        ("SELECT * FROM plan WHERE date = '" + planDate + "';").c_str(), &plan);
+    std::string breakfast = plan.getBreakfast();
+    std::string lunch = plan.getLunch();
+    std::string dinner = plan.getDinner();
+    std::vector<Recipe> recipes;
+    recipes.push_back(recipe_db_.selectRecipe(breakfast, true));
+    recipes.push_back(recipe_db_.selectRecipe(lunch, true));
+    recipes.push_back(recipe_db_.selectRecipe(dinner, true));
+
+    std::set<std::string> tempIngredients;
+    for (auto &recipe : recipes) {
+      std::set<std::string> temp = recipe.getIngredients();
+      for (auto &ingredient : temp) {
+        tempIngredients.insert(ingredient);
+      }
+    }
+    ingredients[planDate] = tempIngredients;
+  }
+
+  void deleteDatePlanGroceryList(std::string const &planDate) {
+    ingredients.erase(planDate);
+  }
+
 };

@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <sstream>
 
 class Recipe {
  private:
@@ -75,5 +76,15 @@ class Recipe {
     std::cout << "Recipe: " << std::endl;
     std::cout << menuRecipe;  // Already contains newline
     std::cout << "----------------------------------------" << std::endl;
+  }
+
+  std::set<std::string> getIngredients() {
+    std::set<std::string> ingredients;
+    std::string temp = getMenuIngredient();
+    std::stringstream ss(temp);
+    while (std::getline(ss, temp, ',')) {
+      ingredients.insert(temp);
+    }
+    return ingredients;
   }
 };

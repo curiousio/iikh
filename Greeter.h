@@ -25,7 +25,8 @@ class Greeter {
     menu.push_back("ADD PLAN");       // 6
     menu.push_back("DELETE PLAN");    // 7
     menu.push_back("UPDATE PLAN");    // 8
-    menu.push_back("QUIT");           // 9
+    menu.push_back("SHOW GROCERY LIST");// 9
+    menu.push_back("QUIT");           // 10
   }
 
   void printAndSelectMenu() {
@@ -65,6 +66,9 @@ class Greeter {
         planDB.updatePlan();
         break;
       case 9:
+        planDB.showGroceryList();
+        break;
+      case 10:
         quit();
         break;
       default:

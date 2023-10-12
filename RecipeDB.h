@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include "DatabaseManager.h"
 #include "Recipe.h"
@@ -79,6 +80,13 @@ class RecipeDB {
     dbm.executeQuery(
         ("SELECT * FROM recipe WHERE name = '" + name + "';").c_str(), &recipe);
     recipe.printRecipe();
+  }
+
+  Recipe selectRecipe(const std::string &name, int) {
+    Recipe recipe;
+    dbm.executeQuery(
+        ("SELECT * FROM recipe WHERE name = '" + name + "';").c_str(), &recipe);
+    return recipe;
   }
 
   void addRecipe() {
