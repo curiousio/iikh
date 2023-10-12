@@ -236,6 +236,11 @@ class PlanDB {
     }
     std::cout << "Input Date (YYYY-MM-DD): ";
     std::getline(std::cin, planDate);
+    std::string today = getToday();
+    if (compareDate(planDate, today)) {
+      std::cout << "Enter Date After " + today << std::endl;
+      return;
+    }
     if (Date.find(planDate) != Date.end()) {
       std::cout << "Wrong Input" << std::endl;
       return;
