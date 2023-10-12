@@ -488,7 +488,7 @@ class PlanDB {
     dbm.executeQuery(("SELECT * FROM plan WHERE date BETWEEN '" + start_date +
         "' AND '" + end_date + "' ORDER BY date ASC;").c_str(), &plans, true);
     if (plans.empty()) {
-      std::cout << "No Plan Between " + start_date + "and " + end_date << std::endl;
+      std::cout << "No Plan Between " + start_date + " and " + end_date << std::endl;
       return;
     }
     for (auto &plan : plans) {
@@ -539,7 +539,7 @@ class PlanDB {
     dbm.executeQuery(("SELECT date FROM plan WHERE date BETWEEN '" + start_date +
         "' AND '" + end_date + "' ORDER BY date ASC;").c_str(), &tempDate, true);
     if (tempDate.empty()) {
-      std::cout << "No Plan Between " + start_date + "and " + end_date << std::endl;
+      std::cout << "No Plan Between " + start_date + " and " + end_date << std::endl;
       return;
     }
     for (auto &i : tempDate) {
