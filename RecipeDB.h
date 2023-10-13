@@ -91,6 +91,11 @@ class RecipeDB {
   void addRecipe() {
     Recipe recipe;
     recipe.addRecipe();
+    std::set<std::string> recipeNames = getRecipeNames();
+    if (recipeNames.find(recipe.getMenuName()) != recipeNames.end()) {
+      std::cout << "Already Exist" << std::endl;
+      return;
+    }
     dbm.executeQuery(
         ("INSERT INTO recipe (name, description, ingredient, recipe) VALUES "
          "('" +
