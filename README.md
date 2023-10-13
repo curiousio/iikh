@@ -11,7 +11,7 @@ Interactive Intelligent Kitchen Helper (IIKH) is a simple CLI based meal planner
 
 ## Requirements
 
-* Microsoft Windows 11
+* Microsoft Windows 11 (recommended)
 * C++14
 * SQLite3
 
@@ -26,7 +26,7 @@ git clone https://github.com/curiousio/iikh.git
 Checkout to the desired version.
 
 ```shell
-git checkout v1.0.0
+git checkout vMAJOR.MINOR.PATCH
 ```
 
 ### GNU/Linux
@@ -52,7 +52,7 @@ sudo dnf install sqlite-devel
 Build from the source and run the application.
 
 ```shell
-g++ main.cpp -l sqlite3
+g++ main.cpp -std=c++14 -l sqlite3
 ./a.out
 ```
 
