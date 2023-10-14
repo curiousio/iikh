@@ -144,7 +144,7 @@ class PlanDB {
                 ret.insert(i);
         }
         if (ret.size() == 0)return;
-        std::cout << "The plan that contains user input \""<<name<<"\" is as follows." << std::endl;
+        std::cout << "Containing user input \""<<name<<"\" ..." << std::endl;
         for (auto& i : ret) {
             std::cout << i + " " << std::endl;
         }
