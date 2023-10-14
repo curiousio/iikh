@@ -1,9 +1,9 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
 
 #include "DatabaseManager.h"
 #include "Recipe.h"
@@ -24,11 +24,12 @@ class RecipeDB {
   }
 
   void searchRecipe() {
-    std::cout << "Select a Mode (1. Print All 2. Select): ";
+    std::cout << "Select a Mode (1. Print All, 2. Select): ";
     int selectNum;
     std::cin >> selectNum;
     std::cin.ignore();
     system("cls");
+
     switch (selectNum) {
       case 1:
         printAllRecipe();
@@ -53,6 +54,7 @@ class RecipeDB {
     for (auto &recipe : recipes) {
       recipe.printNameAndDescription();
     }
+
     std::cout << "Do you want to see a specific recipe? [y/n]: ";
     char select;
     std::cin >> select;
@@ -70,11 +72,13 @@ class RecipeDB {
     std::string name;
     std::cout << "Input Recipe Name: ";
     std::getline(std::cin, name);
+
     dbm.executeQuery(
         ("SELECT * FROM recipe WHERE name = '" + name + "';").c_str(), &recipe);
+
     if (recipe.printRecipe() == 1) {
-        Similarity similarity(name);
-        similarity.checkSimilarity(2);
+      Similarity similarity(name);
+      similarity.checkSimilarity(2);
     }
   }
 
@@ -100,6 +104,7 @@ class RecipeDB {
       std::cout << "Already Exist" << std::endl;
       return;
     }
+
     dbm.executeQuery(
         ("INSERT INTO recipe (name, description, ingredient, recipe) VALUES "
          "('" +
@@ -111,6 +116,7 @@ class RecipeDB {
   void deleteRecipe() {
     std::string menu_recipe;
     std::set<std::string> recipeNames = getRecipeNames();
+
     std::cout << "Input Target Recipe Name: ";
     std::getline(std::cin, menu_recipe);
     if (recipeNames.find(menu_recipe) == recipeNames.end()) {
@@ -119,6 +125,7 @@ class RecipeDB {
       similarity.checkSimilarity(2);
       return;
     }
+
     dbm.executeQuery(
         ("DELETE FROM recipe WHERE name='" + menu_recipe + "';").c_str());
   }
@@ -126,6 +133,7 @@ class RecipeDB {
   void updateRecipe() {
     std::string item, content, menu_recipe;
     std::set<std::string> recipeNames = getRecipeNames();
+
     std::cout << "Input Target Recipe Name: ";
     std::getline(std::cin, menu_recipe);
     if (recipeNames.find(menu_recipe) == recipeNames.end()) {
@@ -134,6 +142,7 @@ class RecipeDB {
       similarity.checkSimilarity(2);
       return;
     }
+
     std::cout << "What would you like to change? (name, description, "
                  "ingredient, recipe): ";
     std::getline(std::cin, item);
@@ -142,6 +151,7 @@ class RecipeDB {
       std::cout << "Wrong Input" << std::endl;
       return;
     }
+
     if (item == "recipe") {
       std::cout << "Input Recipe Method (To finish, just press Enter)"
                 << std::endl;
@@ -161,6 +171,7 @@ class RecipeDB {
       std::cout << "What would you like to change the " + item + " to?: ";
       std::getline(std::cin, content);
     }
+
     dbm.executeQuery(("UPDATE recipe SET " + item + " = '" + content +
                       "' WHERE name = '" + menu_recipe + "';")
                          .c_str());

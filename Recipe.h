@@ -1,10 +1,10 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
-#include <sstream>
 
 class Recipe {
  private:
@@ -14,16 +14,13 @@ class Recipe {
   std::string menuRecipe;
 
  public:
-  // constructor
   Recipe() = default;
 
-  // getter
   std::string getMenuName() { return menuName; }
   std::string getMenuDescription() { return menuDescription; }
   std::string getMenuIngredient() { return menuIngredient; }
   std::string getMenuRecipe() { return menuRecipe; }
 
-  // setter
   void setMenuName(const std::string &name) { menuName = name; }
   void setMenuDescription(const std::string &description) {
     menuDescription = description;
@@ -33,7 +30,6 @@ class Recipe {
   }
   void setMenuRecipe(const std::string &recipe) { menuRecipe = recipe; }
 
-  // 이 부분만 따로 분리시켜 놓은 이유. 문제 2-4 해결.
   void addRecipe() {
     std::cout << "Input Recipe Name: ";
     std::getline(std::cin, menuName);
@@ -51,6 +47,7 @@ class Recipe {
       if (userInput.compare("") == 0) {
         break;
       }
+
       menuRecipe += std::to_string(index++) + ". ";
       menuRecipe += userInput;
       menuRecipe += "\n";
