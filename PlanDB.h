@@ -136,13 +136,16 @@ class PlanDB {
       recipe_db_.selectRecipe(dinner);
     } else {
         std::set <std::string> candidate;
+        std::set <std::string> ret;
         dbm.executeQuery(
             "SELECT name FROM plan;", &candidate, true);
-        if (candidate.size() == 0)return;
-        std::cout << "Did you mean the text below?" << std::endl;
         for (auto& i : candidate) {
-            if (!strstr(i.c_str(), name.c_str()))
-                continue;
+            if (strstr(i.c_str(), name.c_str()))
+                ret.insert(i);
+        }
+        if (ret.size() == 0)return;
+        std::cout << "The plan that contains user input \""<<name<<"\" is as follows." << std::endl;
+        for (auto& i : ret) {
             std::cout << i + " " << std::endl;
         }
       return;
