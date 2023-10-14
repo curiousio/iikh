@@ -11,6 +11,7 @@
 #include "Plan.h"
 #include "Date.h"
 #include "RecipeDB.h"
+#include "Similarity.h"
 
 class PlanDB {
  private:
@@ -30,6 +31,7 @@ class PlanDB {
 
     //map에 넣어놔야함.
     makeDatePlanGroceryList();
+
   }
 
   std::set<std::string> getNames() {
@@ -135,19 +137,8 @@ class PlanDB {
       std::string dinner = plan.getDinner();
       recipe_db_.selectRecipe(dinner);
     } else {
-        std::set <std::string> candidate;
-        std::set <std::string> ret;
-        dbm.executeQuery(
-            "SELECT name FROM plan;", &candidate, true);
-        for (auto& i : candidate) {
-            if (strstr(i.c_str(), name.c_str()))
-                ret.insert(i);
-        }
-        if (ret.size() == 0)return;
-        std::cout << "Containing user input \""<<name<<"\" ..." << std::endl;
-        for (auto& i : ret) {
-            std::cout << i + " " << std::endl;
-        }
+        Similarity similarity(name);
+        similarity.checkSimilarity(1);
       return;
     }
   }
@@ -378,6 +369,8 @@ class PlanDB {
     std::getline(std::cin, planName);
     if (Name.find(planName) == Name.end()) {
       std::cout << "Wrong Input" << std::endl;
+      Similarity similarity(planName);
+      similarity.checkSimilarity(1);
       return;
     }
     dbm.executeQuery(
@@ -460,7 +453,9 @@ class PlanDB {
     std::cout << "Input Target Plan Name: ";
     std::getline(std::cin, planName);
     if (Name.find(planName) == Name.end()) {
+        Similarity similarity(planName);
       std::cout << "Wrong Input" << std::endl;
+      similarity.checkSimilarity(1);
       return;
     }
     std::cout << "Which item do you want to update? (name, breakfast, "

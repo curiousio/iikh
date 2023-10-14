@@ -129,6 +129,7 @@
     <ClInclude Include="PlanDB.h" />
     <ClInclude Include="Recipe.h" />
     <ClInclude Include="RecipeDB.h" />
+    <ClInclude Include="Similarity.h" />
     <ClInclude Include="sqlite\sqlite3.h" />
     <ClInclude Include="sqlite\sqlite3ext.h" />
   </ItemGroup>

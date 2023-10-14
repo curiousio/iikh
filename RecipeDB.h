@@ -7,6 +7,7 @@
 
 #include "DatabaseManager.h"
 #include "Recipe.h"
+#include "Similarity.h"
 
 class RecipeDB {
  private:
@@ -71,7 +72,10 @@ class RecipeDB {
     std::getline(std::cin, name);
     dbm.executeQuery(
         ("SELECT * FROM recipe WHERE name = '" + name + "';").c_str(), &recipe);
-    recipe.printRecipe();
+    if (recipe.printRecipe() == 1) {
+        Similarity similarity(name);
+        similarity.checkSimilarity(2);
+    }
   }
 
   void selectRecipe(const std::string &name) {
@@ -111,6 +115,8 @@ class RecipeDB {
     std::getline(std::cin, menu_recipe);
     if (recipeNames.find(menu_recipe) == recipeNames.end()) {
       std::cout << "Wrong Input" << std::endl;
+      Similarity similarity(menu_recipe);
+      similarity.checkSimilarity(2);
       return;
     }
     dbm.executeQuery(
@@ -124,6 +130,8 @@ class RecipeDB {
     std::getline(std::cin, menu_recipe);
     if (recipeNames.find(menu_recipe) == recipeNames.end()) {
       std::cout << "Wrong Input" << std::endl;
+      Similarity similarity(menu_recipe);
+      similarity.checkSimilarity(2);
       return;
     }
     std::cout << "What would you like to change? (name, description, "

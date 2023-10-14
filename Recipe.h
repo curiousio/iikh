@@ -64,10 +64,10 @@ class Recipe {
     std::cout << "----------------------------------------" << std::endl;
   }
 
-  void printRecipe() {
+  int printRecipe() {
     if (menuName.empty()) {
       std::cout << "No Recipe" << std::endl;
-      return;
+      return 1;
     }
     std::cout << "----------------------------------------" << std::endl;
     std::cout << "Name: " << menuName << std::endl;
@@ -76,6 +76,7 @@ class Recipe {
     std::cout << "Recipe: " << std::endl;
     std::cout << menuRecipe;  // Already contains newline
     std::cout << "----------------------------------------" << std::endl;
+    return 0;
   }
 
   std::set<std::string> getIngredients() {
