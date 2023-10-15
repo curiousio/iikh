@@ -15,29 +15,31 @@ class Greeter {
 
  public:
   Greeter() {
-    menu.push_back("SEARCH RECIPE");  // 1
-    menu.push_back("ADD RECIPE");     // 2
-    menu.push_back("DELETE RECIPE");  // 3
-    menu.push_back("UPDATE RECIPE");  // 4
-    menu.push_back("SEARCH PLAN");    // 5
-    menu.push_back("ADD PLAN");       // 6
-    menu.push_back("DELETE PLAN");    // 7
-    menu.push_back("UPDATE PLAN");    // 8
-    menu.push_back("SHOW GROCERY LIST");// 9
-    menu.push_back("QUIT");           // 10
+    menu.push_back("SEARCH RECIPE");      // 1
+    menu.push_back("ADD RECIPE");         // 2
+    menu.push_back("DELETE RECIPE");      // 3
+    menu.push_back("UPDATE RECIPE");      // 4
+    menu.push_back("SEARCH PLAN");        // 5
+    menu.push_back("ADD PLAN");           // 6
+    menu.push_back("DELETE PLAN");        // 7
+    menu.push_back("UPDATE PLAN");        // 8
+    menu.push_back("SHOW GROCERY LIST");  // 9
+    menu.push_back("QUIT");               // 10
   }
 
   void printAndSelectMenu() {
     int selectNum;
+
     for (int i = 0; i < menu.size(); i++) {
       std::cout << i + 1 << ". " << menu[i] << std::endl;
     }
+
     std::cout << "Select Menu: ";
     std::cin >> selectNum;
-    std::cin.ignore();  // 개행 문자 제거
+    std::cin.ignore();
     system("cls");
-    std::cout << "Selected Menu: " << menu[selectNum - 1] << std::endl;
 
+    std::cout << "Selected Menu: " << menu[selectNum - 1] << std::endl;
     switch (selectNum) {
       case 1:
         recipeDB.searchRecipe();

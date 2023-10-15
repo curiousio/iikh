@@ -5,7 +5,6 @@
 #include <utility>
 
 class Date {
- private:
  public:
   Date() = default;
 
@@ -16,6 +15,7 @@ class Date {
     int date2Year = std::stoi(date2.substr(0, 4));
     int date2Month = std::stoi(date2.substr(5, 2));
     int date2Day = std::stoi(date2.substr(8, 2));
+
     if (date1Year > date2Year) {
       return true;
     } else if (date1Year == date2Year) {
@@ -41,12 +41,15 @@ class Date {
     std::string year = std::to_string(1900 + ltm->tm_year);
     std::string month = std::to_string(1 + ltm->tm_mon);
     std::string day = std::to_string(ltm->tm_mday);
+
     if (month.length() == 1) {
       month = "0" + month;
     }
+
     if (day.length() == 1) {
       day = "0" + day;
     }
+
     return year + "-" + month + "-" + day;
   }
 };

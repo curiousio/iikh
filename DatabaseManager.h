@@ -9,10 +9,11 @@
 
 class DatabaseManager {
  public:
-  int rc;  // SQLite3 리턴 코드
+  int rc;  // SQLite3 return code
 
   DatabaseManager(const char *dbName) {
     rc = sqlite3_open(dbName, &db);
+
     if (rc) {
       std::cerr << "Can't Open Database: " << sqlite3_errmsg(db) << std::endl;
     }
@@ -20,30 +21,32 @@ class DatabaseManager {
 
   ~DatabaseManager() { sqlite3_close(db); }
 
-  // 아닐 때는 이걸 사용
   void executeQuery(const char *query) {
     char *errMsg = nullptr;
     rc = sqlite3_exec(db, query, nullptr, nullptr, &errMsg);
-    if (rc != SQLITE_OK) {
-      std::cerr << "Error : " << errMsg << std::endl;
-      sqlite3_free(errMsg);
-    }
-  }
 
-  // Recipe, plan Class Type으로 받아올 때는 이걸 사용
-  void executeQuery(const char *query, void *data) {
-    char *errMsg = nullptr;
-    rc = sqlite3_exec(db, query, getterCallback, data, &errMsg);
     if (rc != SQLITE_OK) {
       std::cerr << "Error: " << errMsg << std::endl;
       sqlite3_free(errMsg);
     }
   }
 
-  // Vector로 받아올 때는 이걸 사용
+  // Recipe & Plan
+  void executeQuery(const char *query, void *data) {
+    char *errMsg = nullptr;
+    rc = sqlite3_exec(db, query, getterCallback, data, &errMsg);
+
+    if (rc != SQLITE_OK) {
+      std::cerr << "Error: " << errMsg << std::endl;
+      sqlite3_free(errMsg);
+    }
+  }
+
+  // vector
   void executeQuery(const char *query, void *data, int) {
     char *errMsg = nullptr;
     rc = sqlite3_exec(db, query, vectorCallback, data, &errMsg);
+
     if (rc != SQLITE_OK) {
       std::cerr << "Error: " << errMsg << std::endl;
       sqlite3_free(errMsg);
@@ -53,21 +56,23 @@ class DatabaseManager {
  private:
   sqlite3 *db;
 
-  // argc가 5면 Recipe, 6이면 Plan type으로.
+  // argc 5: Recipe, 6: Plan
   static int getterCallback(void *data, int argc, char **argv,
                             char **azColName) {
-    // RecipeDB 전체
+    // RecipeDB
     if (argc == 5) {
       Recipe *recipe = static_cast<Recipe *>(data);
+
       recipe->setMenuName(argv[1] ? argv[1] : "NULL");
       recipe->setMenuDescription(argv[2] ? argv[2] : "NULL");
       recipe->setMenuIngredient(argv[3] ? argv[3] : "NULL");
       recipe->setMenuRecipe(argv[4] ? argv[4] : "NULL");
     }
 
-    // PlanDB 전체
+    // PlanDB
     if (argc == 6) {
       Plan *plan = static_cast<Plan *>(data);
+
       plan->setName(argv[1] ? argv[1] : "NULL");
       plan->setDate(argv[2] ? argv[2] : "NULL");
       plan->setBreakfast(argv[3] ? argv[3] : "NULL");
@@ -78,13 +83,14 @@ class DatabaseManager {
     return 0;
   }
 
-  // Vector로 받아올 때는 이걸 사용
+  // vector
   static int vectorCallback(void *data, int argc, char **argv,
                             char **azColName) {
     // RecipeDB
     if (argc == 5) {
       std::vector<Recipe> *recipe = static_cast<std::vector<Recipe> *>(data);
       Recipe temp;
+
       temp.setMenuName(argv[1] ? argv[1] : "NULL");
       temp.setMenuDescription(argv[2] ? argv[2] : "NULL");
       temp.setMenuIngredient(argv[3] ? argv[3] : "NULL");
@@ -92,9 +98,10 @@ class DatabaseManager {
       recipe->push_back(temp);
     }
 
-    // RecipeDB의 Name, Ingredient, PlanDB의 Name, Date만 받아올 때
+    // Name & Ingredient of RecipeDB, Name & Date of PlanDB
     if (argc == 1) {
       std::set<std::string> *name = static_cast<std::set<std::string> *>(data);
+
       name->insert(argv[0] ? argv[0] : "NULL");
     }
 
@@ -102,6 +109,7 @@ class DatabaseManager {
     if (argc == 6) {
       std::vector<Plan> *plan = static_cast<std::vector<Plan> *>(data);
       Plan temp;
+
       temp.setName(argv[1] ? argv[1] : "NULL");
       temp.setDate(argv[2] ? argv[2] : "NULL");
       temp.setBreakfast(argv[3] ? argv[3] : "NULL");

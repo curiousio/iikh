@@ -5,17 +5,16 @@
 #include "Greeter.h"
 
 int main(void) {
-  // iikh logo 크게 출력
-  std::cout << "  III   III  K  K  H  H" << std::endl;
-  std::cout << "   I     I   K K   H  H" << std::endl;
-  std::cout << "   I     I   KK    HHHH" << std::endl;
-  std::cout << "   I     I   K K   H  H" << std::endl;
-  std::cout << "  III   III  K  K  H  H" << std::endl;
+  // print the iikh logo
+  std::cout << "  III   III   K  K  H  H" << std::endl;
+  std::cout << "   I     I    K K   H  H" << std::endl;
+  std::cout << "   I     I    KK    HHHH" << std::endl;
+  std::cout << "   I     I    K K   H  H" << std::endl;
+  std::cout << "  III   III   K  K  H  H" << std::endl;
 
-  // 1초 멈춤
+  // halt for 1s
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
-  // Greeter 객체 생성
   Greeter g;
 
   while (true) {

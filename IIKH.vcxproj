@@ -124,11 +124,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DatabaseManager.h" />
+    <ClInclude Include="Date.h" />
     <ClInclude Include="Greeter.h" />
     <ClInclude Include="Plan.h" />
     <ClInclude Include="PlanDB.h" />
     <ClInclude Include="Recipe.h" />
     <ClInclude Include="RecipeDB.h" />
+    <ClInclude Include="Similarity.h" />
     <ClInclude Include="sqlite\sqlite3.h" />
     <ClInclude Include="sqlite\sqlite3ext.h" />
   </ItemGroup>
